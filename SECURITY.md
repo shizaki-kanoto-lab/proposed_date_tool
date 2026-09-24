@@ -1,7 +1,9 @@
 # Security Policy
 
-## 脆弱性・不具合の報告について
+## 脆弱性の報告について
 
-本ツールに関する脆弱性やセキュリティ上の不具合を見つけた場合は、以下のIssueページからご報告ください。
+本ツールに関する脆弱性を見つけた場合は、公開のIssueではなく、このリポジトリの「Security」タブにある「Report a vulnerability」から非公開でご報告ください。
 
-https://github.com/shizaki-kanoto-lab/proposed_date_tool/issues
+https://github.com/shizaki-kanoto-lab/proposed_date_tool/security/advisories/new
+
+脆弱性以外の不具合・バグ報告は、通常のIssueからお願いします。
