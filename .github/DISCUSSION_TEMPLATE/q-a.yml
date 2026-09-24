@@ -1,0 +1,21 @@
+title: "質問"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        本ツールの使い方や動作についてのご質問はこちらからどうぞ。
+  - type: textarea
+    id: question
+    attributes:
+      label: 質問内容
+      description: できるだけ具体的にご記入ください
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 実行環境（任意）
+      description: ブラウザやOSなど、わかる範囲で構いません
+    validations:
+      required: false
