@@ -1,21 +1,21 @@
-title: "質問"
 labels: []
 body:
   - type: markdown
     attributes:
       value: |
-        本ツールの使い方や動作についてのご質問はこちらからどうぞ。
+        空き日程抽出ツールについての質問はこちらへどうぞ。
   - type: textarea
     id: question
     attributes:
       label: 質問内容
-      description: できるだけ具体的にご記入ください
+      description: 何について知りたいですか？
+      placeholder: 例）Googleカレンダーとの連携はできますか？
     validations:
       required: true
-  - type: input
-    id: environment
+  - type: textarea
+    id: context
     attributes:
-      label: 実行環境（任意）
-      description: ブラウザやOSなど、わかる範囲で構いません
+      label: 試したこと・状況（任意）
+      description: すでに試したことや、今の状況があれば教えてください
     validations:
       required: false
