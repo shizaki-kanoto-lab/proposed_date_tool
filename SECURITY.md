@@ -6,4 +6,4 @@
 
 https://github.com/shizaki-kanoto-lab/proposed_date_tool/security/advisories/new
 
-脆弱性以外の不具合・バグ報告は、通常の [Issue] からお願いします。
+脆弱性以外の不具合・バグ報告は、通常の [[Issue]](https://github.com/shizaki-kanoto-lab/proposed_date_tool/issues) からお願いします。
