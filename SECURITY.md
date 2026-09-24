@@ -2,7 +2,7 @@
 
 ## 脆弱性の報告について
 
-本ツールに関する脆弱性を見つけた場合は、公開のIssueではなく、このリポジトリの「Security」タブにある「Report a vulnerability」から非公開でご報告ください。
+本ツールに関する脆弱性を見つけた場合は、公開のIssueではなく、このリポジトリの「Security」タブにある「Report a vulnerability」からご報告ください。
 
 https://github.com/shizaki-kanoto-lab/proposed_date_tool/security/advisories/new
 
