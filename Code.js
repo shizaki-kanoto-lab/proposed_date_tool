@@ -1,6 +1,6 @@
 /**
  * ==========================================
- * 予定抽出
+ * 空き日程抽出ツール
  * ==========================================
  *
  * 昼または夜のどちらか一方でも空いている日を
@@ -43,7 +43,7 @@ function doGet() {
 
   return HtmlService
     .createHtmlOutputFromFile('index')
-    .setTitle('予定抽出')
+    .setTitle('空き日程抽出ツール')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
 }
 
