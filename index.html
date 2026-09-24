@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <base target="_top">
+
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: #333;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 30px;
+      box-sizing: border-box;
+    }
+
+    .header,
+    .settings,
+    .result-area,
+    .info,
+    .setting-section,
+    .debug-toggle {
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      max-width: 700px;
+      margin-bottom: 10px;
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .account-info {
+      font-size: 13px;
+      color: #666;
+      text-align: right;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 30px;
+    }
+
+    .settings {
+      display: flex;
+      gap: 20px;
+      align-items: end;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .output-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .output-options label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: normal;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    input[type="date"],
+    select {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 9px 18px;
+      border: 1px solid #00bfae;
+      border-radius: 6px;
+      background: white;
+      color: #008f83;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .settings button {
+      padding: 14px 52px;
+      margin-left: 16px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #f0fffd;
+    }
+
+    button.primary {
+      background: #00c7b7;
+      color: white;
+    }
+
+    button.primary:hover {
+      background: #00b3a5;
+    }
+
+    .result-area {
+      margin-top: 25px;
+    }
+
+    textarea {
+      width: 100%;
+      max-width: 700px;
+      height: 300px;
+      padding: 12px;
+      box-sizing: border-box;
+      font-family: monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+
+    .buttons {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .buttons button {
+      padding: 14px 52px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .info {
+      margin-top: 25px;
+      padding: 15px;
+      background: #f5f5f5;
+      max-width: 700px;
+      box-sizing: border-box;
+    }
+
+    .info.intro {
+      margin-top: 12px;
+    }
+
+    .info.intro .note {
+      margin-top: 0;
+    }
+
+    #status {
+      min-height: 1.5em;
+      padding-top: 15px;
+    }
+
+    .error {
+      color: #d00;
+    }
+
+    .success {
+      color: #1565c0;
+    }
+
+    .debug {
+      margin-top: 30px;
+      max-width: 900px;
+    }
+
+    .debug-day {
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      padding: 12px;
+      background: #fafafa;
+    }
+
+    .debug-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .event {
+      margin: 4px 0;
+      padding: 4px 8px;
+      background: white;
+    }
+
+    .daytime {
+      background: #fff3cd;
+    }
+
+    .nighttime {
+      background: #dbeafe;
+    }
+
+    .detail-area {
+      margin-top: 10px;
+    }
+
+    .detail-content {
+      margin-top: 10px;
+      padding: 10px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .loading-detail {
+      color: #666;
+    }
+
+    .setting-section {
+      max-width: 700px;
+      margin-top: 25px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f5f5f5;
+      box-sizing: border-box;
+    }
+
+    .time-settings {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .time-group {
+      display: flex;
+      align-items: end;
+      gap: 8px;
+    }
+
+    .calendar-list {
+      margin-top: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 10px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .calendar-item {
+      margin: 5px 0;
+    }
+
+    .calendar-item label {
+      font-weight: normal;
+      cursor: pointer;
+    }
+
+    .note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .debug-toggle {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #f5f5f5;
+      max-width: 700px;
+      box-sizing: border-box;
+    }
+
+    .small-buttons {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .fixed-exclusion {
+      margin-top: 10px;
+      padding: 8px 10px;
+      background: white;
+      border: 1px solid #ddd;
+      color: #666;
+      font-size: 13px;
+    }
+
+    @media screen and (max-width: 1000px) {
+
+/* 横スクロール防止(スクロール時のガタつき対策) */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* 全体の文字 */
+body {
+  font-size: 18px;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ページ幅 */
+.container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 16px 12px;
+  box-sizing: border-box;
+}
+
+/* タイトル */
+.header {
+  display: block;
+  max-width: none;
+}
+
+.header h1 {
+  font-size: 26px;
+  margin: 0 0 6px;
+}
+
+.account-info {
+  font-size: 14px;
+  text-align: left;
+}
+
+/* 説明 */
+.info {
+  width: 100%;
+  max-width: none;
+  font-size: 17px;
+  line-height: 1.7;
+  box-sizing: border-box;
+}
+
+.info h2,
+.info h3 {
+  font-size: 21px;
+}
+
+/* 検索エリア */
+.settings {
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.settings .field {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.settings label {
+  display: block;
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+/* 日付入力 */
+input[type="date"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: 48px;
+  padding: 0 12px;
+  line-height: 46px;
+  box-sizing: border-box;
+  font-size: 17px;
+  color: #333;
+  -webkit-text-fill-color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.settings .field {
+  min-width: 0;
+}
+
+/* 予定を取得 */
+.settings button {
+  width: 100%;
+  max-width: none;
+  height: 52px;
+  margin-left: 0;
+  font-size: 17px;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+/* 結果 */
+.result-area {
+  width: 100%;
+  max-width: none;
+}
+
+textarea {
+  width: 100%;
+  max-width: none;
+  height: 180px;
+  padding: 12px;
+  box-sizing: border-box;
+  font-size: 17px;
+  line-height: 1.7;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* コピー・クリア */
+.buttons {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+}
+
+.buttons button {
+  flex: 1;
+  height: 48px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+/* 判定条件・時間設定など */
+.setting-section {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.setting-section h2,
+.setting-section h3 {
+  font-size: 21px;
+}
+
+/* 時刻セレクト */
+.time-settings {
+  width: 100%;
+}
+
+.time-group select {
+  font-size: 17px;
+  min-height: 44px;
+}
+
+/* タップ領域確保 */
+.small-buttons button {
+  min-height: 44px;
+  font-size: 16px;
+}
+
+/* 横はみ出し防止(スクロール時のガタつき対策) */
+.debug-toggle {
+  box-sizing: border-box;
+}
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+
+      <h1>空き日程抽出ツール</h1>
+    
+      <div class="account-info">
+        ログイン中：<span id="currentUserEmail">確認中……</span>
+      </div>
+    
+    </div>
+
+    <!-- ======================================
+       カレンダーの利用について
+       ====================================== -->
+
+       <div class="info intro">
+
+        <div class="note">
+
+          あなたが所有するGoogleカレンダーの予定を読み取り、予定が空いている日をテキストで出力するツールです。<br>
+
+          予定の追加・変更・削除は行わず、読み取った内容もこの画面での判定にのみ使用します。<br>
+
+          予定のタイトルや具体的な時刻が画面に表示されるのは、デバッグ表示をONにした場合のみです。
+
+        </div>
+
+      </div>
+
+
+  <div id="status"></div>
+
+
+  <!-- ======================================
+       日付設定
+       ====================================== -->
+
+  <div class="settings">
+
+    <div class="field">
+
+      <label for="startDate">
+        開始日
+      </label>
+
+      <input
+        type="date"
+        id="startDate">
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="endDate">
+        終了日
+      </label>
+
+      <input
+        type="date"
+        id="endDate">
+
+    </div>
+
+
+    <button
+      class="primary"
+      onclick="searchDates()">
+
+      予定を取得
+
+    </button>
+
+  </div>
+
+
+  <!-- ======================================
+       結果
+       ====================================== -->
+
+  <div class="result-area">
+
+    <textarea
+      id="result"
+      placeholder="ここに調整ツールへ貼り付ける日程が表示されます。"
+      readonly></textarea>
+
+
+    <div class="output-options">
+
+      <label>
+        <input
+          type="checkbox"
+          id="zeroPad"
+          checked
+          onchange="refreshOutputText()">
+        0埋めする
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          id="monthDayOnly"
+          onchange="refreshOutputText()">
+        月日のみ出力
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          id="includeTime"
+          onchange="refreshOutputText()">
+        時間表示を含める
+      </label>
+
+    </div>
+
+
+    <div class="buttons">
+
+      <button
+        class="primary"
+        onclick="copyResult()">
+
+        コピー
+
+      </button>
+
+
+      <button
+        onclick="clearResult()">
+
+        クリア
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       判定条件
+       ====================================== -->
+
+  <div class="info">
+
+    <strong>判定条件</strong>
+
+    <ul>
+
+      <li>
+        終日予定 → 対象外
+      </li>
+
+      <li>
+        昼・夜ともに予定あり
+        → 対象外
+      </li>
+
+      <li>
+        昼だけ予定あり
+        → 対象
+      </li>
+
+      <li>
+        夜だけ予定あり
+        → 対象
+      </li>
+
+      <li>
+        昼・夜ともに空き
+        → 対象
+      </li>
+
+    </ul>
+
+
+    <div class="note">
+
+      ※対象時間帯に重なっている予定のみ判定に使用します。<br>
+
+      ※検索期間は最大180日です。<br>
+
+      ※長期間の検索による処理負荷を抑えるため、180日を超える範囲は検索できません。
+
+    </div>
+
+  </div>
+
+  <!-- ======================================
+       時間設定
+       ====================================== -->
+
+  <div class="setting-section">
+
+    <strong>時間設定</strong>
+
+
+    <div class="time-settings">
+
+
+      <div class="time-group">
+
+        <div class="field">
+
+          <label for="dayStart">
+            昼の開始
+          </label>
+
+          <select id="dayStart"></select>
+
+        </div>
+
+
+        <div style="padding-bottom: 8px;">
+          ～
+        </div>
+
+
+        <div class="field">
+
+          <label for="dayEnd">
+            昼の終了
+          </label>
+
+          <select id="dayEnd"></select>
+
+        </div>
+
+      </div>
+
+
+      <div class="time-group">
+
+        <div class="field">
+
+          <label for="nightStart">
+            夜の開始
+          </label>
+
+          <select id="nightStart"></select>
+
+        </div>
+
+
+        <div style="padding-bottom: 8px;">
+          ～
+        </div>
+
+
+        <div class="field">
+
+          <label for="nightEnd">
+            夜の終了
+          </label>
+
+          <select id="nightEnd"></select>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="note">
+
+      初期値：昼 13:00〜18:00／夜 21:00〜24:00
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       除外カレンダー
+       ====================================== -->
+
+  <div class="setting-section">
+
+    <strong>
+      除外するカレンダー
+    </strong>
+
+
+    <div
+      id="calendarList"
+      class="calendar-list">
+
+      カレンダーを取得しています……
+
+    </div>
+
+
+    <div class="small-buttons">
+
+      <button
+        onclick="checkAllCalendars()">
+
+        すべてチェック
+
+      </button>
+
+
+      <button
+        onclick="uncheckAllCalendars()">
+
+        すべて解除
+
+      </button>
+
+    </div>
+
+
+    <div class="fixed-exclusion">
+
+      「ToDo リスト」は常に除外されます。
+
+    </div>
+
+
+    <div class="note">
+
+      チェックしたカレンダーは予定判定から除外されます。<br>
+
+      表示されるのは、あなたが所有しているカレンダーのみです。
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       デバッグON/OFF
+       ====================================== -->
+
+  <div class="debug-toggle">
+
+    <label>
+
+      <input
+        type="checkbox"
+        id="debugEnabled"
+        onchange="toggleDebug()">
+
+      デバッグ表示をONにする
+
+    </label>
+
+  </div>
+
+
+  <div
+    class="debug"
+    id="debugSection"
+    style="display:none;">
+
+    <h2>デバッグ</h2>
+
+    <div id="debugArea">
+      対象期間を検索すると、
+      各日の判定を確認できます。
+    </div>
+
+  </div>
+
+
+<script>
+
+/* ==========================================
+ * 画面上へのエラー表示(不具合調査用)
+ * ========================================== */
+
+window.addEventListener(
+  'error',
+  function(event) {
+
+    const status =
+      document.getElementById(
+        'status'
+      );
+
+
+    if (status) {
+
+      status.innerHTML +=
+        '<div class="error">' +
+        '画面エラー：' +
+        String(
+          event.message ||
+          event.error ||
+          event
+        ) +
+        '</div>';
+    }
+  }
+);
+
+
+/* ==========================================
+ * 直近の検索結果(出力形式の再生成用)
+ * ========================================== */
+
+let lastResultDates = [];
+
+
+/* ==========================================
+ * 初期化
+ * ========================================== */
+
+window.addEventListener(
+  'load',
+  initialize
+);
+
+
+function reportInitError_(
+  label,
+  error
+) {
+
+  console.log(
+    label,
+    error
+  );
+
+
+  const status =
+    document.getElementById(
+      'status'
+    );
+
+
+  if (status) {
+
+    status.innerHTML +=
+      '<div class="error">' +
+      label +
+      '：' +
+      String(
+        (error && error.message) ||
+        error
+      ) +
+      '</div>';
+  }
+}
+
+
+function initialize() {
+
+  try {
+
+    createTimeOptions();
+
+  } catch (error) {
+
+    reportInitError_(
+      '時間選択肢の作成に失敗しました。',
+      error
+    );
+  }
+
+
+  try {
+
+    const today =
+      new Date();
+
+
+    const firstDay =
+      new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+
+
+    const lastDay =
+      new Date(
+        today.getFullYear(),
+        today.getMonth() + 2,
+        0
+      );
+
+
+    document.getElementById(
+      'startDate'
+    ).value =
+      formatInputDate(
+        firstDay
+      );
+
+
+    document.getElementById(
+      'endDate'
+    ).value =
+      formatInputDate(
+        lastDay
+      );
+
+  } catch (error) {
+
+    reportInitError_(
+      '日付初期値の設定に失敗しました。',
+      error
+    );
+  }
+
+
+  try {
+
+    loadSettings();
+
+  } catch (error) {
+
+    reportInitError_(
+      '設定の読み込みに失敗しました。',
+      error
+    );
+  }
+
+
+  try {
+
+    loadCalendars();
+
+  } catch (error) {
+
+    reportInitError_(
+      'カレンダー一覧の読み込みに失敗しました。',
+      error
+    );
+  }
+
+
+  try {
+
+    let emailResolved =
+      false;
+
+
+    google.script.run
+    .withSuccessHandler(function(email) {
+
+      emailResolved =
+        true;
+
+      document.getElementById(
+        'currentUserEmail'
+      ).textContent =
+        email || '取得できません';
+
+    })
+    .withFailureHandler(function(error) {
+
+      emailResolved =
+        true;
+
+      document.getElementById(
+        'currentUserEmail'
+      ).textContent =
+        '取得できません';
+
+      reportInitError_(
+        'ログインメール取得に失敗しました。',
+        error
+      );
+
+    })
+    .getCurrentUserEmail();
+
+
+    /*
+     * 応答がないまま固まるのを防ぐための
+     * タイムアウト処理
+     */
+    setTimeout(
+      function() {
+
+        if (!emailResolved) {
+
+          document.getElementById(
+            'currentUserEmail'
+          ).textContent =
+            '取得できません(タイムアウト)';
+        }
+      },
+      8000
+    );
+
+  } catch (error) {
+
+    document.getElementById(
+      'currentUserEmail'
+    ).textContent =
+      '取得できません';
+
+    reportInitError_(
+      'ログインメール取得の呼び出しに失敗しました。',
+      error
+    );
+  }
+}
+
+
+/* ==========================================
+ * 時間選択肢作成
+ * ========================================== */
+
+function createTimeOptions() {
+
+  const ids = [
+    'dayStart',
+    'dayEnd',
+    'nightStart',
+    'nightEnd'
+  ];
+
+
+  ids.forEach(
+    id => {
+
+      const select =
+        document.getElementById(id);
+
+
+      select.innerHTML = '';
+
+
+      /*
+       * 00:00〜23:30
+       */
+      for (
+        let hour = 0;
+        hour < 24;
+        hour++
+      ) {
+
+        for (
+          let minute = 0;
+          minute < 60;
+          minute += 30
+        ) {
+
+          const value =
+            `${String(hour).padStart(2, '0')}:` +
+            `${String(minute).padStart(2, '0')}`;
+
+
+          const option =
+            document.createElement(
+              'option'
+            );
+
+
+          option.value =
+            value;
+
+          option.textContent =
+            value;
+
+
+          select.appendChild(
+            option
+          );
+        }
+      }
+
+
+      /*
+       * 24:00
+       */
+      const option24 =
+        document.createElement(
+          'option'
+        );
+
+
+      option24.value =
+        '24:00';
+
+      option24.textContent =
+        '24:00';
+
+
+      select.appendChild(
+        option24
+      );
+    }
+  );
+
+
+  /*
+   * 初期値
+   */
+  document.getElementById(
+    'dayStart'
+  ).value = '13:00';
+
+
+  document.getElementById(
+    'dayEnd'
+  ).value = '18:00';
+
+
+  document.getElementById(
+    'nightStart'
+  ).value = '21:00';
+
+
+  /*
+   * 夜の終了は24:00
+   */
+  document.getElementById(
+    'nightEnd'
+  ).value = '24:00';
+}
+
+
+/* ==========================================
+ * 設定読み込み
+ * ========================================== */
+
+function loadSettings() {
+
+  const saved =
+    localStorage.getItem(
+      'proposedDateSettings'
+    );
+
+
+  if (!saved) {
+    return;
+  }
+
+
+  try {
+
+    const settings =
+      JSON.parse(saved);
+
+
+    setSelectValue(
+      'dayStart',
+      settings.dayStart
+    );
+
+
+    setSelectValue(
+      'dayEnd',
+      settings.dayEnd
+    );
+
+
+    setSelectValue(
+      'nightStart',
+      settings.nightStart
+    );
+
+
+    /*
+     * 過去の設定で夜の終了が
+     * 00:00になっている場合は
+     * 24:00として読み込む。
+     */
+    const nightEnd =
+      settings.nightEnd === '00:00'
+        ? '24:00'
+        : settings.nightEnd;
+
+
+    setSelectValue(
+      'nightEnd',
+      nightEnd
+    );
+
+
+  } catch (error) {
+
+    console.log(
+      '設定の読み込みに失敗しました。',
+      error
+    );
+  }
+}
+
+
+/* ==========================================
+ * select値設定
+ * ========================================== */
+
+function setSelectValue(
+  id,
+  value
+) {
+
+  if (!value) {
+    return;
+  }
+
+
+  const select =
+    document.getElementById(id);
+
+
+  const exists =
+    Array.from(
+      select.options
+    )
+      .some(
+        option =>
+          option.value === value
+      );
+
+
+  if (exists) {
+
+    select.value =
+      value;
+  }
+}
+
+
+/* ==========================================
+ * 設定保存
+ * ========================================== */
+
+function saveSettings() {
+
+  const settings = {
+
+    dayStart:
+      document.getElementById(
+        'dayStart'
+      ).value,
+
+    dayEnd:
+      document.getElementById(
+        'dayEnd'
+      ).value,
+
+    nightStart:
+      document.getElementById(
+        'nightStart'
+      ).value,
+
+    nightEnd:
+      document.getElementById(
+        'nightEnd'
+      ).value,
+
+    excludedCalendarIds:
+      getExcludedCalendarIds()
+
+  };
+
+
+  localStorage.setItem(
+    'proposedDateSettings',
+    JSON.stringify(settings)
+  );
+}
+
+
+/* ==========================================
+ * カレンダー読み込み
+ * ========================================== */
+
+function loadCalendars() {
+
+  google.script.run
+
+    .withSuccessHandler(
+      displayCalendars
+    )
+
+    .withFailureHandler(
+      function(error) {
+
+        document.getElementById(
+          'calendarList'
+        ).innerHTML =
+          '<div class="error">' +
+          'カレンダーの取得に失敗しました。' +
+          '<br>' +
+          escapeHtml(
+            error.message
+          ) +
+          '</div>';
+
+      }
+    )
+
+    .getOwnedCalendars();
+}
+
+
+/* ==========================================
+ * カレンダー表示
+ * ========================================== */
+
+function displayCalendars(
+  calendars
+) {
+
+  const area =
+    document.getElementById(
+      'calendarList'
+    );
+
+
+  if (
+    !calendars ||
+    calendars.length === 0
+  ) {
+
+    area.innerHTML =
+      '所有しているカレンダーがありません。';
+
+    return;
+  }
+
+
+  let savedIds = [];
+
+
+  const saved =
+    localStorage.getItem(
+      'proposedDateSettings'
+    );
+
+
+  if (saved) {
+
+    try {
+
+      const settings =
+        JSON.parse(saved);
+
+
+      savedIds =
+        settings.excludedCalendarIds ||
+        [];
+
+    } catch (error) {
+
+      savedIds = [];
+    }
+  }
+
+
+  let html = '';
+
+
+  calendars.forEach(
+    calendar => {
+
+      const checked =
+        savedIds.includes(
+          calendar.id
+        )
+          ? 'checked'
+          : '';
+
+
+      html += `
+
+        <div class="calendar-item">
+
+          <label>
+
+            <input
+              type="checkbox"
+              class="excluded-calendar"
+              value="${escapeHtml(
+                calendar.id
+              )}"
+              ${checked}>
+
+            ${escapeHtml(
+              calendar.name
+            )}
+
+          </label>
+
+        </div>
+
+      `;
+    }
+  );
+
+
+  area.innerHTML =
+    html;
+
+
+  document
+    .querySelectorAll(
+      '.excluded-calendar'
+    )
+    .forEach(
+      checkbox => {
+
+        checkbox.addEventListener(
+          'change',
+          saveSettings
+        );
+
+      }
+    );
+}
+
+
+/* ==========================================
+ * 全カレンダー選択
+ * ========================================== */
+
+function checkAllCalendars() {
+
+  document
+    .querySelectorAll(
+      '.excluded-calendar'
+    )
+    .forEach(
+      checkbox => {
+
+        checkbox.checked =
+          true;
+      }
+    );
+
+
+  saveSettings();
+}
+
+
+/* ==========================================
+ * 全カレンダー解除
+ * ========================================== */
+
+function uncheckAllCalendars() {
+
+  document
+    .querySelectorAll(
+      '.excluded-calendar'
+    )
+    .forEach(
+      checkbox => {
+
+        checkbox.checked =
+          false;
+      }
+    );
+
+
+  saveSettings();
+}
+
+
+/* ==========================================
+ * 除外カレンダー取得
+ * ========================================== */
+
+function getExcludedCalendarIds() {
+
+  return Array.from(
+    document.querySelectorAll(
+      '.excluded-calendar:checked'
+    )
+  )
+    .map(
+      checkbox =>
+        checkbox.value
+    );
+}
+
+
+/* ==========================================
+ * デバッグ切替
+ * ========================================== */
+
+function toggleDebug() {
+
+  const enabled =
+    document.getElementById(
+      'debugEnabled'
+    ).checked;
+
+
+  document.getElementById(
+    'debugSection'
+  ).style.display =
+    enabled
+      ? 'block'
+      : 'none';
+
+
+  if (!enabled) {
+
+    document.getElementById(
+      'debugArea'
+    ).innerHTML = '';
+  }
+}
+
+
+/* ==========================================
+ * 検索
+ * ========================================== */
+
+function searchDates() {
+
+  const startDate =
+    document.getElementById(
+      'startDate'
+    ).value;
+
+
+  const endDate =
+    document.getElementById(
+      'endDate'
+    ).value;
+
+
+  const dayStart =
+    document.getElementById(
+      'dayStart'
+    ).value;
+
+
+  const dayEnd =
+    document.getElementById(
+      'dayEnd'
+    ).value;
+
+
+  const nightStart =
+    document.getElementById(
+      'nightStart'
+    ).value;
+
+
+  const nightEnd =
+    document.getElementById(
+      'nightEnd'
+    ).value;
+
+
+  if (
+    !startDate ||
+    !endDate
+  ) {
+
+    document.getElementById(
+      'status'
+    ).innerHTML =
+      '<div class="error">' +
+      '開始日と終了日を指定してください。' +
+      '</div>';
+
+    return;
+  }
+
+
+  if (
+    !dayStart ||
+    !dayEnd ||
+    !nightStart ||
+    !nightEnd
+  ) {
+
+    document.getElementById(
+      'status'
+    ).innerHTML =
+      '<div class="error">' +
+      '時間設定をすべて指定してください。' +
+      '</div>';
+
+    return;
+  }
+
+
+  /* ----------------------------------------
+   * 時間の前後関係を確認
+   * ---------------------------------------- */
+
+  if (
+    timeToMinutes(dayStart) >=
+    timeToMinutes(dayEnd)
+  ) {
+
+    document.getElementById(
+      'status'
+    ).innerHTML =
+      '<div class="error">' +
+      '昼の開始時刻は終了時刻より前にしてください。' +
+      '</div>';
+
+    return;
+  }
+
+
+  if (
+    timeToMinutes(nightStart) >=
+    timeToMinutes(nightEnd)
+  ) {
+
+    document.getElementById(
+      'status'
+    ).innerHTML =
+      '<div class="error">' +
+      '夜の開始時刻は終了時刻より前にしてください。' +
+      '</div>';
+
+    return;
+  }
+
+
+  saveSettings();
+
+
+  document.getElementById(
+    'status'
+  ).innerHTML =
+    '<div class="loading">' +
+    '予定を取得しています……' +
+    '</div>';
+
+
+  const debugEnabled =
+    document.getElementById(
+      'debugEnabled'
+    ).checked;
+
+
+  if (debugEnabled) {
+
+    document.getElementById(
+      'debugArea'
+    ).innerHTML =
+      '取得中……';
+  }
+
+
+  google.script.run
+
+    .withSuccessHandler(
+      displayResult
+    )
+
+    .withFailureHandler(
+      displayError
+    )
+
+    .getProposedDates(
+
+      startDate,
+
+      endDate,
+
+      dayStart,
+
+      dayEnd,
+
+      nightStart,
+
+      nightEnd,
+
+      getExcludedCalendarIds()
+
+    );
+}
+
+
+/* ==========================================
+ * 時刻を分へ変換
+ * ========================================== */
+
+function timeToMinutes(
+  value
+) {
+
+  const parts =
+    value.split(':');
+
+
+  const hour =
+    Number(parts[0]);
+
+  const minute =
+    Number(parts[1]);
+
+
+  return (
+    hour * 60 +
+    minute
+  );
+}
+
+
+/* ==========================================
+ * 結果表示
+ * ========================================== */
+
+function displayResult(
+  data
+) {
+
+  document.getElementById(
+    'status'
+  ).innerHTML =
+    '<div class="success">' +
+    '取得完了' +
+    '</div>';
+
+
+  lastResultDates =
+    data.dates ||
+    [];
+
+
+  refreshOutputText();
+
+
+  const debugEnabled =
+    document.getElementById(
+      'debugEnabled'
+    ).checked;
+
+
+  if (debugEnabled) {
+
+    displayDebugList(
+      data.debugDates
+    );
+
+  } else {
+
+    document.getElementById(
+      'debugArea'
+    ).innerHTML = '';
+  }
+}
+
+
+/* ==========================================
+ * 出力テキスト生成
+ * ========================================== */
+
+function buildOutputText(
+  dates
+) {
+
+  const includeTime =
+    document.getElementById(
+      'includeTime'
+    ).checked;
+
+  const zeroPad =
+    document.getElementById(
+      'zeroPad'
+    ).checked;
+
+  const monthDayOnly =
+    document.getElementById(
+      'monthDayOnly'
+    ).checked;
+
+
+  return dates
+    .map(
+      item => {
+
+        const month =
+          zeroPad
+            ? String(
+                item.month
+              ).padStart(2, '0')
+            : String(
+                item.month
+              );
+
+        const day =
+          zeroPad
+            ? String(
+                item.day
+              ).padStart(2, '0')
+            : String(
+                item.day
+              );
+
+        const datePart =
+          monthDayOnly
+            ? `${month}/${day}`
+            : `${item.year}/${month}/${day}`;
+
+
+        let line =
+          `${datePart}(${item.weekday})`;
+
+
+        if (
+          includeTime &&
+          item.startTime
+        ) {
+
+          line +=
+            ` ${item.startTime}〜`;
+        }
+
+
+        return line;
+      }
+    )
+    .join('\n');
+}
+
+
+/* ==========================================
+ * 出力テキスト再生成
+ * ========================================== */
+
+function refreshOutputText() {
+
+  document.getElementById(
+    'result'
+  ).value =
+    buildOutputText(
+      lastResultDates
+    );
+}
+
+
+/* ==========================================
+ * デバッグ一覧
+ * ========================================== */
+
+function displayDebugList(
+  debugDates
+) {
+
+  const area =
+    document.getElementById(
+      'debugArea'
+    );
+
+
+  if (
+    !debugDates ||
+    debugDates.length === 0
+  ) {
+
+    area.innerHTML =
+      '対象期間に日付がありません。';
+
+    return;
+  }
+
+
+  let html =
+    '<div>' +
+    '各日の判定を確認できます。' +
+    '</div>';
+
+
+  debugDates.forEach(
+    (item, index) => {
+
+      html += `
+
+        <div class="debug-day">
+
+          <div class="debug-title">
+
+            ${escapeHtml(
+              item.date
+            )}
+
+            (${escapeHtml(
+              item.weekday
+            )})
+
+            —
+            ${item.isTarget
+              ? '対象'
+              : '対象外'}
+
+            —
+            ${escapeHtml(
+              item.reason
+            )}
+
+          </div>
+
+
+          <button
+            onclick="loadDebug(
+              '${escapeHtml(
+                item.date
+              )}',
+              ${index}
+            )">
+
+            詳細を見る
+
+          </button>
+
+
+          <div
+            id="debug-${index}"
+            class="detail-area">
+          </div>
+
+        </div>
+
+      `;
+    }
+  );
+
+
+  area.innerHTML =
+    html;
+}
+
+
+/* ==========================================
+ * デバッグ詳細取得
+ * ========================================== */
+
+function loadDebug(
+  date,
+  index
+) {
+
+  const area =
+    document.getElementById(
+      `debug-${index}`
+    );
+
+
+  area.innerHTML =
+    '<div class="loading-detail">' +
+    'デバッグ情報取得中……' +
+    '</div>';
+
+
+  google.script.run
+
+    .withSuccessHandler(
+      function(data) {
+
+        displayDayDebug(
+          data,
+          area
+        );
+
+      }
+    )
+
+    .withFailureHandler(
+      function(error) {
+
+        area.innerHTML =
+          '<div class="error">' +
+          'エラー：' +
+          escapeHtml(
+            error.message
+          ) +
+          '</div>';
+
+      }
+    )
+
+    .getDayDebug(
+
+      convertDisplayDateToInputDate(
+        date
+      ),
+
+      document.getElementById(
+        'dayStart'
+      ).value,
+
+      document.getElementById(
+        'dayEnd'
+      ).value,
+
+      document.getElementById(
+        'nightStart'
+      ).value,
+
+      document.getElementById(
+        'nightEnd'
+      ).value,
+
+      getExcludedCalendarIds()
+
+    );
+}
+
+
+/* ==========================================
+ * デバッグ詳細表示
+ * ========================================== */
+
+function displayDayDebug(
+  data,
+  area
+) {
+
+  let html = '';
+
+
+  html += `
+    <div class="detail-content">
+
+      <div>
+        <strong>判定：</strong>
+        ${data.isTarget
+          ? '対象'
+          : '対象外'}
+      </div>
+
+      <div>
+        <strong>理由：</strong>
+        ${escapeHtml(
+          data.reason
+        )}
+      </div>
+
+      <hr>
+
+      <div>
+        終日予定：
+        ${data.hasAllDayEvent
+          ? 'あり'
+          : 'なし'}
+      </div>
+
+      <div>
+        昼：
+        ${data.hasDaytimeEvent
+          ? '予定あり'
+          : '空き'}
+      </div>
+
+      <div>
+        夜：
+        ${data.hasNighttimeEvent
+          ? '予定あり'
+          : '空き'}
+      </div>
+
+      <hr>
+
+      <strong>
+        対象カレンダー
+      </strong>
+
+      <div>
+        ${data.targetCalendars
+          .map(
+            name =>
+              escapeHtml(name)
+          )
+          .join('<br>')}
+      </div>
+  `;
+
+
+  if (
+    data.events.length > 0
+  ) {
+
+    html += `
+      <hr>
+
+      <strong>
+        この日の予定
+      </strong>
+    `;
+
+
+    data.events.forEach(
+      event => {
+
+        html += `
+          <div class="event">
+
+            [${escapeHtml(
+              event.calendar
+            )}]
+
+            ${escapeHtml(
+              event.title
+            )}
+
+            (${escapeHtml(
+              event.time
+            )})
+
+          </div>
+        `;
+      }
+    );
+
+  } else {
+
+    html += `
+      <hr>
+      この日の予定はありません。
+    `;
+  }
+
+
+  if (
+    data.daytimeEvents.length > 0
+  ) {
+
+    html += `
+      <hr>
+
+      <strong>
+        昼判定に使われた予定
+      </strong>
+    `;
+
+
+    data.daytimeEvents.forEach(
+      event => {
+
+        html += `
+          <div class="event daytime">
+
+            [${escapeHtml(
+              event.calendar
+            )}]
+
+            ${escapeHtml(
+              event.title
+            )}
+
+            (${escapeHtml(
+              event.time
+            )})
+
+          </div>
+        `;
+      }
+    );
+  }
+
+
+  if (
+    data.nighttimeEvents.length > 0
+  ) {
+
+    html += `
+      <hr>
+
+      <strong>
+        夜判定に使われた予定
+      </strong>
+    `;
+
+
+    data.nighttimeEvents.forEach(
+      event => {
+
+        html += `
+          <div class="event nighttime">
+
+            [${escapeHtml(
+              event.calendar
+            )}]
+
+            ${escapeHtml(
+              event.title
+            )}
+
+            (${escapeHtml(
+              event.time
+            )})
+
+          </div>
+        `;
+      }
+    );
+  }
+
+
+  html += `
+    </div>
+  `;
+
+
+  area.innerHTML =
+    html;
+}
+
+
+/* ==========================================
+ * エラー
+ * ========================================== */
+
+function displayError(
+  error
+) {
+
+  const statusEl =
+    document.getElementById(
+      'status'
+    );
+
+  statusEl.innerHTML = '';
+
+  const errorDiv =
+    document.createElement(
+      'div'
+    );
+
+  errorDiv.className =
+    'error';
+
+  errorDiv.textContent =
+    'エラー：' +
+    (
+      (error && error.message) ||
+      String(error)
+    );
+
+  statusEl.appendChild(
+    errorDiv
+  );
+
+
+  if (
+    document.getElementById(
+      'debugEnabled'
+    ).checked
+  ) {
+
+    document.getElementById(
+      'debugArea'
+    ).innerHTML = '';
+  }
+}
+
+
+/* ==========================================
+ * コピー
+ * ========================================== */
+
+async function copyResult() {
+
+  const result =
+    document.getElementById(
+      'result'
+    );
+
+
+  if (!result.value) {
+    return;
+  }
+
+
+  try {
+
+    await navigator.clipboard
+      .writeText(
+        result.value
+      );
+
+
+    document.getElementById(
+      'status'
+    ).innerHTML =
+      '<div class="success">' +
+      'コピーしました。' +
+      '</div>';
+
+
+  } catch (error) {
+
+    result.focus();
+
+    result.select();
+
+    document.execCommand(
+      'copy'
+    );
+
+
+    document.getElementById(
+      'status'
+    ).innerHTML =
+      '<div class="success">' +
+      'コピーしました。' +
+      '</div>';
+  }
+}
+
+
+/* ==========================================
+ * クリア
+ * ========================================== */
+
+function clearResult() {
+
+  lastResultDates = [];
+
+
+  document.getElementById(
+    'result'
+  ).value = '';
+
+
+  document.getElementById(
+    'status'
+  ).innerHTML = '';
+
+
+  if (
+    document.getElementById(
+      'debugEnabled'
+    ).checked
+  ) {
+
+    document.getElementById(
+      'debugArea'
+    ).innerHTML =
+      '対象期間を検索すると、各日の判定を確認できます。';
+
+  } else {
+
+    document.getElementById(
+      'debugArea'
+    ).innerHTML = '';
+  }
+}
+
+
+/* ==========================================
+ * 日付
+ * ========================================== */
+
+function formatInputDate(
+  date
+) {
+
+  const year =
+    date.getFullYear();
+
+
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2, '0');
+
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2, '0');
+
+
+  return (
+    `${year}-${month}-${day}`
+  );
+}
+
+
+function convertDisplayDateToInputDate(
+  date
+) {
+
+  return date.replace(
+    /\//g,
+    '-'
+  );
+}
+
+
+/* ==========================================
+ * HTMLエスケープ
+ * ========================================== */
+
+function escapeHtml(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      '&amp;'
+    )
+
+    .replace(
+      /</g,
+      '&lt;'
+    )
+
+    .replace(
+      />/g,
+      '&gt;'
+    )
+
+    .replace(
+      /"/g,
+      '&quot;'
+    )
+
+    .replace(
+      /'/g,
+      '&#039;'
+    );
+}
+
+</script>
+
+  </div>
+
+</body>
+</html>
