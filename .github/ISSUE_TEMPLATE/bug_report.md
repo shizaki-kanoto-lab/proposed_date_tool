@@ -1,8 +1,10 @@
 ---
 name: 不具合報告
 about: 動作がおかしい・エラーが出る場合の報告
-title: "[Bug]"
+title: "[Bug]ここに題名を書いてください"
 labels: bug
+assignees: ''
+
 ---
 
 ## 症状

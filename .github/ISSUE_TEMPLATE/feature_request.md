@@ -1,8 +1,10 @@
 ---
 name: 機能要望
 about: 新しい機能・改善のアイデアを提案する
-title: "[Feature]"
+title: "[Feature]ここに題名を書いてください"
 labels: enhancement
+assignees: ''
+
 ---
 
 ## 実現したいこと
@@ -15,4 +17,3 @@ labels: enhancement
 
 
 ## その他
-
