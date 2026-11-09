@@ -36,6 +36,18 @@ body {
   margin: 0;
 }
 
+.app-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+
 .account-info {
   font-size: 13px;
   color: #666;
