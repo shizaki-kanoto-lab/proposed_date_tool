@@ -39,11 +39,20 @@ const FIXED_EXCLUDED_CALENDAR_NAME = 'ToDo リスト';
  * Webアプリ表示
  * ========================================== */
 
+/**
+ * ファビコンはWebブラウザ版（GitHub Pages）で公開している画像を使う。
+ * Apps Scriptのプロジェクトには画像を置けないため、URLで指定する。
+ */
+const FAVICON_URL =
+  'https://shizaki-kanoto-lab.github.io/proposed_date_tool/icons/favicon-32.png';
+
+
 function doGet() {
 
   return HtmlService
     .createHtmlOutputFromFile('index')
     .setTitle('空き日程抽出ツール')
+    .setFaviconUrl(FAVICON_URL)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
 }
 
