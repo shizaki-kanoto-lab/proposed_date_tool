@@ -48,6 +48,31 @@ body {
   height: 48px;
 }
 
+.policy {
+  line-height: 1.7;
+}
+
+.policy h1 {
+  font-size: 26px;
+}
+
+.policy h2 {
+  font-size: 18px;
+}
+
+.policy code {
+  word-break: break-all;
+}
+
+.policy-meta {
+  color: #666;
+  font-size: 13px;
+}
+
+.policy-back {
+  margin-top: 30px;
+}
+
 .account-info {
   font-size: 13px;
   color: #666;
