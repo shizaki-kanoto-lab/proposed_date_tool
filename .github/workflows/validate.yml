@@ -17,7 +17,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Validate appsscript.json / Code.js / index.html
         run: node .github/scripts/validate.js
+
+      - name: Run tests
+        run: npm test
