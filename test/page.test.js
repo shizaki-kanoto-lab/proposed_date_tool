@@ -55,3 +55,27 @@ test('画面の要素が app.js の参照先とそろっている', () => {
     assert.ok(app.includes(id), id);
   }
 });
+
+
+test('アイコンとファビコンの画像がすべて web/ にある', () => {
+  const paths = [...html.matchAll(/(?:href|src)="(icons\/[^"]+)"/g)].map(match => match[1]);
+
+  assert.equal(paths.length, 4);
+
+  for (const path of paths) {
+    assert.ok(fs.existsSync(new URL(`../web/${path}`, import.meta.url)), path);
+  }
+});
+
+
+test('プライバシーポリシーはスクリプトを読み込まず、トップから辿れる', () => {
+  const policy = read('privacy.html');
+  const csp = policy.match(/Content-Security-Policy" content="([^"]+)"/)[1];
+
+  assert.ok(csp.includes("default-src 'none'"));
+  assert.ok(!csp.includes('script-src'));
+  assert.ok(!/<script\b/i.test(policy));
+  assert.ok(html.includes('href="privacy.html"'));
+  assert.ok(policy.includes('calendar.calendarlist.readonly'));
+  assert.ok(policy.includes('calendar.events.owned.readonly'));
+});

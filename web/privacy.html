@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+
+  <title>プライバシーポリシー | 空き日程抽出ツール</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/favicon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+
+<body>
+
+  <main class="container policy">
+
+    <h1 class="app-title">
+      <img class="app-icon" src="icons/icon.png" alt="" width="48" height="48">
+      プライバシーポリシー
+    </h1>
+
+    <p>
+      このページは、空き日程抽出ツールのWebブラウザ版（以下「本ツール」）が、
+      Googleアカウントから受け取る情報をどのように扱うかを説明するものです。
+    </p>
+
+    <p class="policy-meta">
+      運営者：隠れ家クロウラ<br>
+      制定日：2026年11月9日
+    </p>
+
+
+    <h2>1. 本ツールが読み取る情報</h2>
+
+    <p>本ツールは、Googleでログインした利用者の許可を得て、Google Calendar APIから次の情報を読み取ります。</p>
+
+    <ul>
+      <li>利用者が所有するカレンダーの一覧（カレンダー名、ID、メインのカレンダーかどうか）</li>
+      <li>それらのカレンダーの、指定した期間の予定（タイトル、開始・終了日時、キャンセル済みかどうか、予定の種類、「空き時間」として扱う設定、利用者自身の出欠の返答）</li>
+      <li>ログイン中のアカウントを画面に表示するための、メインカレンダーのID（通常はメールアドレス）</li>
+    </ul>
+
+    <p>求める権限は次の2つだけです。いずれも読み取り専用で、予定の作成・変更・削除はできません。</p>
+
+    <ul>
+      <li><code>https://www.googleapis.com/auth/calendar.calendarlist.readonly</code></li>
+      <li><code>https://www.googleapis.com/auth/calendar.events.owned.readonly</code></li>
+    </ul>
+
+
+    <h2>2. 情報の使い方</h2>
+
+    <p>
+      読み取った情報は、指定した期間のうち予定が空いている日を判定し、画面に表示するためだけに使います。
+      判定はすべて利用者のブラウザの中で行います。
+    </p>
+
+    <p>
+      予定のタイトルや具体的な時刻が画面に表示されるのは、利用者がデバッグ表示をONにした場合だけです。
+    </p>
+
+
+    <h2>3. 情報の送信と共有</h2>
+
+    <p>
+      本ツールが通信するのは、Googleのログイン（Google Identity Services）とGoogle Calendar APIだけです。
+      読み取った情報を運営者や第三者のサーバーへ送信することはなく、販売・共有もしません。
+      アクセス解析や広告のツールも使っていません。
+    </p>
+
+    <p>
+      本ツールのページはGitHub Pagesで配信しています。ページを開いた際の通信記録（IPアドレスなど）は、
+      配信元のGitHubが同社のプライバシーステートメントに従って扱います。運営者はこの記録を受け取りません。
+    </p>
+
+
+    <h2>4. 情報の保存</h2>
+
+    <ul>
+      <li>ログインで得たアクセストークンは、ページを開いている間だけブラウザのメモリに置き、保存しません。</li>
+      <li>予定の内容は保存しません。ページを閉じるか再読み込みすると消えます。</li>
+      <li>昼・夜の時間設定と、除外するカレンダーのIDは、次回も使えるよう利用者のブラウザ（localStorage）に保存します。このデータはブラウザの外へ送信されず、ブラウザのサイトデータを削除すると消えます。</li>
+    </ul>
+
+
+    <h2>5. Google API サービスのユーザーデータに関するポリシーへの準拠</h2>
+
+    <p>
+      本ツールによるGoogle APIから受け取った情報の使用および他のアプリへの転送は、
+      限定使用の要件を含む
+      <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener noreferrer">Google API サービスのユーザーデータに関するポリシー</a>
+      に準拠します。
+    </p>
+
+
+    <h2>6. アクセス権の取り消し</h2>
+
+    <p>
+      本ツールへのアクセス権は、
+      <a href="https://myaccount.google.com/connections" rel="noopener noreferrer">Googleアカウントのサードパーティ接続の管理ページ</a>
+      からいつでも取り消せます。
+    </p>
+
+
+    <h2>7. お問い合わせ</h2>
+
+    <p>
+      本ポリシーや本ツールに関するお問い合わせは、
+      <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool/issues" rel="noopener noreferrer">GitHubのIssue</a>
+      からお願いします。セキュリティに関する報告は、
+      <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool/security/advisories/new" rel="noopener noreferrer">脆弱性の報告フォーム</a>
+      をご利用ください。
+    </p>
+
+
+    <h2>8. 改定</h2>
+
+    <p>
+      本ポリシーを改定する場合は、このページで内容と改定日をお知らせします。
+      改定の履歴は
+      <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool/commits/main/web/privacy.html" rel="noopener noreferrer">GitHubのコミット履歴</a>
+      で確認できます。
+    </p>
+
+
+    <p class="policy-back">
+      <a href="./">空き日程抽出ツールに戻る</a>
+    </p>
+
+  </main>
+
+</body>
+</html>
