@@ -70,6 +70,8 @@ test('アイコンとファビコンの画像がすべて web/ にある', () =>
 
 test('プライバシーポリシーはスクリプトを読み込まず、トップから辿れる', () => {
   const policy = read('privacy.html');
+
+  assert.ok(policy.includes('href="terms.html"'));
   const csp = policy.match(/Content-Security-Policy" content="([^"]+)"/)[1];
 
   assert.ok(csp.includes("default-src 'none'"));
@@ -78,4 +80,16 @@ test('プライバシーポリシーはスクリプトを読み込まず、ト�
   assert.ok(html.includes('href="privacy.html"'));
   assert.ok(policy.includes('calendar.calendarlist.readonly'));
   assert.ok(policy.includes('calendar.events.owned.readonly'));
+});
+
+
+test('利用規約はスクリプトを読み込まず、トップから辿れる', () => {
+  const terms = read('terms.html');
+  const csp = terms.match(/Content-Security-Policy" content="([^"]+)"/)[1];
+
+  assert.ok(csp.includes("default-src 'none'"));
+  assert.ok(!csp.includes('script-src'));
+  assert.ok(!/<script\b/i.test(terms));
+  assert.ok(html.includes('href="terms.html"'));
+  assert.ok(terms.includes('href="privacy.html"'));
 });

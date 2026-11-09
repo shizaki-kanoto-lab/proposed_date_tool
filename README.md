@@ -65,9 +65,10 @@ Google Calendarの予定を確認し、日程調整ツールの候補日とし�
 - ログインの情報（アクセストークン）はブラウザのメモリにだけ置き、保存しません。ページを閉じたり再読み込みしたりするとログインし直しになります。
 - 時間設定と除外するカレンダーの設定は、Apps Script版と同じくブラウザに保存されます。
 
-### プライバシーポリシー
+### 利用規約とプライバシーポリシー
 
-https://shizaki-kanoto-lab.github.io/proposed_date_tool/privacy.html
+- 利用規約：https://shizaki-kanoto-lab.github.io/proposed_date_tool/terms.html
+- プライバシーポリシー：https://shizaki-kanoto-lab.github.io/proposed_date_tool/privacy.html
 
 ### Apps Script版との違い
 
