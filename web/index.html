@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://accounts.google.com/gsi/client; style-src 'self' https://accounts.google.com/gsi/style; connect-src https://www.googleapis.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; img-src 'self'; base-uri 'none'; form-action 'none'">
+
+  <title>空き日程抽出ツール</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+
+      <h1>空き日程抽出ツール</h1>
+    
+      <div class="account-info">
+        ログイン中：<span id="currentUserEmail">未ログイン</span>
+        <button id="loginButton" class="primary login-button" disabled>
+          Googleでログイン
+        </button>
+      </div>
+    
+    </div>
+
+    <!-- ======================================
+       カレンダーの利用について
+       ====================================== -->
+
+       <div class="info intro">
+
+        <div class="note">
+
+          あなたが所有するGoogleカレンダーの予定を読み取り、予定が空いている日をテキストで出力するツールです。<br>
+
+          予定の追加・変更・削除は行わず、読み取った内容はこのブラウザの中での判定にのみ使用し、外部へ送信しません。ログイン情報と予定は保存せず、ページを閉じると消えます。<br>
+
+          予定のタイトルや具体的な時刻が画面に表示されるのは、デバッグ表示をONにした場合のみです。<br>
+
+          ログイン時に「このアプリは Google で確認されていません」と表示される場合があります。
+
+        </div>
+
+      </div>
+
+
+  <div id="status"></div>
+
+
+  <!-- ======================================
+       日付設定
+       ====================================== -->
+
+  <div class="settings">
+
+    <div class="field">
+
+      <label for="startDate">
+        開始日
+      </label>
+
+      <input
+        type="date"
+        id="startDate">
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="endDate">
+        終了日
+      </label>
+
+      <input
+        type="date"
+        id="endDate">
+
+    </div>
+
+
+    <button
+      id="searchButton"
+      class="primary">
+
+      予定を取得
+
+    </button>
+
+  </div>
+
+
+  <!-- ======================================
+       結果
+       ====================================== -->
+
+  <div class="result-area">
+
+    <textarea
+      id="result"
+      placeholder="ここに調整ツールへ貼り付ける日程が表示されます。"
+      readonly></textarea>
+
+
+    <div class="output-options">
+
+      <label>
+        <input
+          type="checkbox"
+          id="zeroPad"
+          checked>
+        0埋めする
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          id="monthDayOnly">
+        月日のみ出力
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          id="includeTime">
+        時間表示を含める
+      </label>
+
+    </div>
+
+
+    <div class="buttons">
+
+      <button
+        id="copyButton"
+        class="primary">
+
+        コピー
+
+      </button>
+
+
+      <button
+        id="clearButton">
+
+        クリア
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       判定条件
+       ====================================== -->
+
+  <div class="info">
+
+    <strong>判定条件</strong>
+
+    <ul>
+
+      <li>
+        終日予定 → 対象外
+      </li>
+
+      <li>
+        昼・夜ともに予定あり
+        → 対象外
+      </li>
+
+      <li>
+        昼だけ予定あり
+        → 対象
+      </li>
+
+      <li>
+        夜だけ予定あり
+        → 対象
+      </li>
+
+      <li>
+        昼・夜ともに空き
+        → 対象
+      </li>
+
+    </ul>
+
+
+    <div class="note">
+
+      ※対象時間帯に重なっている予定のみ判定に使用します。<br>
+
+      ※検索期間は最大180日です。<br>
+
+      ※長期間の検索による処理負荷を抑えるため、180日を超える範囲は検索できません。
+
+    </div>
+
+  </div>
+
+  <!-- ======================================
+       時間設定
+       ====================================== -->
+
+  <div class="setting-section">
+
+    <strong>時間設定</strong>
+
+
+    <div class="time-settings">
+
+
+      <div class="time-group">
+
+        <div class="field">
+
+          <label for="dayStart">
+            昼の開始
+          </label>
+
+          <select id="dayStart"></select>
+
+        </div>
+
+
+        <div class="time-separator">
+          ～
+        </div>
+
+
+        <div class="field">
+
+          <label for="dayEnd">
+            昼の終了
+          </label>
+
+          <select id="dayEnd"></select>
+
+        </div>
+
+      </div>
+
+
+      <div class="time-group">
+
+        <div class="field">
+
+          <label for="nightStart">
+            夜の開始
+          </label>
+
+          <select id="nightStart"></select>
+
+        </div>
+
+
+        <div class="time-separator">
+          ～
+        </div>
+
+
+        <div class="field">
+
+          <label for="nightEnd">
+            夜の終了
+          </label>
+
+          <select id="nightEnd"></select>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="note">
+
+      初期値：昼 13:00〜18:00／夜 21:00〜24:00
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       除外カレンダー
+       ====================================== -->
+
+  <div class="setting-section">
+
+    <strong>
+      除外するカレンダー
+    </strong>
+
+
+    <div
+      id="calendarList"
+      class="calendar-list">
+
+      ログインするとカレンダーを表示します。
+
+    </div>
+
+
+    <div class="small-buttons">
+
+      <button
+        id="checkAllButton">
+
+        すべてチェック
+
+      </button>
+
+
+      <button
+        id="uncheckAllButton">
+
+        すべて解除
+
+      </button>
+
+    </div>
+
+
+    <div class="fixed-exclusion">
+
+      「ToDo リスト」は常に除外されます。
+
+    </div>
+
+
+    <div class="note">
+
+      チェックしたカレンダーは予定判定から除外されます。<br>
+
+      表示されるのは、あなたが所有しているカレンダーのみです。
+
+    </div>
+
+  </div>
+
+
+  <!-- ======================================
+       デバッグON/OFF
+       ====================================== -->
+
+  <div class="debug-toggle">
+
+    <label>
+
+      <input
+        type="checkbox"
+        id="debugEnabled">
+
+      デバッグ表示をONにする
+
+    </label>
+
+  </div>
+
+
+  <div
+    class="debug"
+    id="debugSection">
+
+    <h2>デバッグ</h2>
+
+    <div id="debugArea">
+      対象期間を検索すると、
+      各日の判定を確認できます。
+    </div>
+
+  </div>
+
+
+  </div>
+
+</body>
+</html>
