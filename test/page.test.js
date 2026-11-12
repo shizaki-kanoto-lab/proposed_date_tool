@@ -93,3 +93,14 @@ test('利用規約はスクリプトを読み込まず、トップから辿れ�
   assert.ok(html.includes('href="terms.html"'));
   assert.ok(terms.includes('href="privacy.html"'));
 });
+
+
+test('リンクを共有したときのカード（OGP）の画像が web/ にある', () => {
+  const image = /property="og:image" content="([^"]+)"/.exec(html)[1];
+  const base = 'https://shizaki-kanoto-lab.github.io/proposed_date_tool/';
+
+  assert.ok(image.startsWith(base), image);
+  assert.ok(fs.existsSync(new URL(`../web/${image.slice(base.length)}`, import.meta.url)));
+  assert.match(html, /property="og:url" content="https:\/\/shizaki-kanoto-lab\.github\.io\/proposed_date_tool\/"/);
+  assert.match(html, /name="twitter:card" content="summary_large_image"/);
+});
