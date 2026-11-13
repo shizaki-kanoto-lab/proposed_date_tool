@@ -44,7 +44,7 @@ const FIXED_EXCLUDED_CALENDAR_NAME = 'ToDo リスト';
  * Apps Scriptのプロジェクトには画像を置けないため、URLで指定する。
  */
 const FAVICON_URL =
-  'https://shizaki-kanoto-lab.github.io/proposed_date_tool/icons/favicon-32.png';
+  'https://shizaki-kanoto.is-a.dev/proposed_date_tool/icons/favicon-32.png';
 
 
 function doGet() {
