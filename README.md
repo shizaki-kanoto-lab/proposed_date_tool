@@ -44,7 +44,7 @@ Google Calendarの予定を確認し、日程調整ツールの候補日とし�
 
 ## Webブラウザ版の使い方
 
-1. https://shizaki-kanoto-lab.github.io/proposed_date_tool/ を開く
+1. https://shizaki-kanoto.is-a.dev/proposed_date_tool/ を開く
 2. 「Googleでログイン」を押し、使うGoogleアカウントを選ぶ
 3. カレンダーの読み取りを許可する
 4. 以降は「使い方」と同じ手順で操作する
@@ -67,8 +67,8 @@ Google Calendarの予定を確認し、日程調整ツールの候補日とし�
 
 ### 利用規約とプライバシーポリシー
 
-- 利用規約：https://shizaki-kanoto-lab.github.io/proposed_date_tool/terms.html
-- プライバシーポリシー：https://shizaki-kanoto-lab.github.io/proposed_date_tool/privacy.html
+- 利用規約：https://shizaki-kanoto.is-a.dev/proposed_date_tool/terms.html
+- プライバシーポリシー：https://shizaki-kanoto.is-a.dev/proposed_date_tool/privacy.html
 
 ### Apps Script版との違い
 
