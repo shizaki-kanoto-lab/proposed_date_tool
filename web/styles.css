@@ -359,6 +359,19 @@ textarea {
   cursor: default;
 }
 
+.login-notice {
+  max-width: 700px;
+  box-sizing: border-box;
+  margin: 0 0 4px;
+  padding: 8px 12px;
+  border-left: 4px solid #00c7b7;
+  border-radius: 4px;
+  background: #e8f9f7;
+  color: #1e4a46;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 @media screen and (max-width: 1000px) {
 
 /* 横スクロール防止(スクロール時のガタつき対策) */
