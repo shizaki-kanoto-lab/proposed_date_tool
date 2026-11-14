@@ -5,10 +5,13 @@ import {
   AuthRequiredError,
   CalendarApiError,
   SCOPES,
+  buildAuthUrl,
   createAuth,
   createCalendarClient,
   describeError,
-  hasAllScopes
+  getRedirectUri,
+  hasAllScopes,
+  parseAuthResponse
 } from '../web/calendar-api.js';
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status });
@@ -178,43 +181,95 @@ test('describeError の文言', () => {
 });
 
 
-function setupAuth() {
-  const state = { time: 1000, events: [], timers: [], requested: 0 };
-  const oauth2 = {
-    initTokenClient(config) {
-      state.config = config;
-      return { requestAccessToken() { state.requested++; } };
-    }
+function fakeStorage() {
+  const map = new Map();
+  return {
+    getItem: key => (map.has(key) ? map.get(key) : null),
+    setItem: (key, value) => map.set(key, String(value)),
+    removeItem: key => map.delete(key),
+    map
   };
+}
+
+function setupAuth({ storage = fakeStorage() } = {}) {
+  const state = { time: 1000, events: [], timers: [], navigated: [] };
+  let counter = 0;
   const auth = createAuth({
     clientId: 'fake-client',
-    oauth2,
+    redirectUri: 'https://example.test/tool/',
+    storage,
+    navigate: url => state.navigated.push(new URL(url)),
     onChange: event => state.events.push(event),
+    cryptoImpl: { getRandomValues: bytes => bytes.fill(++counter) },
     now: () => state.time,
     setTimer: (fn, ms) => { state.timers.push({ fn, ms }); return state.timers.length; },
     clearTimer: () => {}
   });
 
-  return { auth, state };
+  return { auth, state, storage };
 }
 
-const grant = { access_token: 'tok', expires_in: 3600, scope: SCOPES.join(' ') };
+// signIn で移動した先の state を使って、Google から戻ってきた URL の # を作る
+function returnHash(state, fields) {
+  const sent = state.navigated.at(-1).searchParams.get('state');
+  return '#' + new URLSearchParams({ state: sent, ...fields });
+}
+
+const grant = { access_token: 'tok', token_type: 'Bearer', expires_in: '3600', scope: SCOPES.join(' ') };
+
+
+test('同意画面の URL は読み取り専用の2スコープで、トークンを # で受け取る', () => {
+  const url = new URL(buildAuthUrl({
+    clientId: 'fake-client',
+    redirectUri: 'https://example.test/tool/',
+    state: 'abc'
+  }));
+
+  assert.equal(url.origin + url.pathname, 'https://accounts.google.com/o/oauth2/v2/auth');
+  assert.equal(url.searchParams.get('client_id'), 'fake-client');
+  assert.equal(url.searchParams.get('redirect_uri'), 'https://example.test/tool/');
+  assert.equal(url.searchParams.get('response_type'), 'token');
+  assert.equal(url.searchParams.get('scope'), SCOPES.join(' '));
+  assert.equal(url.searchParams.get('include_granted_scopes'), 'false');
+  assert.equal(url.searchParams.get('state'), 'abc');
+});
+
+
+test('戻り先は index.html の有無にかかわらず同じ', () => {
+  assert.equal(
+    getRedirectUri({ origin: 'https://example.test', pathname: '/tool/index.html' }),
+    'https://example.test/tool/'
+  );
+  assert.equal(
+    getRedirectUri({ origin: 'https://example.test', pathname: '/tool/' }),
+    'https://example.test/tool/'
+  );
+});
+
+
+test('ログインの応答でない # は無視する', () => {
+  assert.equal(parseAuthResponse(''), null);
+  assert.equal(parseAuthResponse('#section'), null);
+  assert.deepEqual(parseAuthResponse('#error=access_denied&state=x'), { error: 'access_denied', state: 'x' });
+});
 
 
 test('ログイン成功でトークンを保持し、期限が近づくと expired を通知する', () => {
-  const { auth, state } = setupAuth();
+  const { auth, state, storage } = setupAuth();
 
-  assert.equal(state.config.client_id, 'fake-client');
-  assert.equal(state.config.scope, SCOPES.join(' '));
   assert.equal(auth.getAccessToken(), null);
+  assert.equal(auth.completeSignIn(''), false);
 
   auth.signIn();
-  assert.equal(state.requested, 1);
+  assert.equal(state.navigated.length, 1);
+  assert.equal(state.navigated[0].searchParams.get('client_id'), 'fake-client');
+  assert.equal(storage.map.size, 1);
 
-  state.config.callback(grant);
+  assert.equal(auth.completeSignIn(returnHash(state, grant)), true);
   assert.deepEqual(state.events, [{ state: 'signedIn' }]);
   assert.equal(auth.getAccessToken(), 'tok');
   assert.equal(state.timers[0].ms, 3570 * 1000);
+  assert.equal(storage.map.size, 0, 'state は使い捨て');
 
   state.time += 3570 * 1000;
   assert.equal(auth.getAccessToken(), null);
@@ -227,25 +282,52 @@ test('ログイン成功でトークンを保持し、期限が近づくと expi
 });
 
 
+test('state が一致しない応答は受け付けない', () => {
+  const { auth, state } = setupAuth();
+
+  // ログインを始めていないのに応答が来た
+  assert.equal(auth.completeSignIn('#' + new URLSearchParams({ ...grant, state: 'forged' })), true);
+
+  // 始めたが state が違う
+  auth.signIn();
+  auth.completeSignIn('#' + new URLSearchParams({ ...grant, state: 'forged' }));
+
+  assert.deepEqual(state.events, [
+    { state: 'error', code: 'state_mismatch' },
+    { state: 'error', code: 'state_mismatch' }
+  ]);
+  assert.equal(auth.getAccessToken(), null);
+});
+
+
 test('一部のスコープだけ許可されたらトークンを保持しない', () => {
   const { auth, state } = setupAuth();
 
-  state.config.callback({ ...grant, scope: SCOPES[0] });
+  auth.signIn();
+  auth.completeSignIn(returnHash(state, { ...grant, scope: SCOPES[0] }));
 
   assert.deepEqual(state.events, [{ state: 'partial' }]);
   assert.equal(auth.getAccessToken(), null);
 });
 
 
-test('同意の拒否とポップアップの失敗を通知する', () => {
+test('同意の拒否を通知する', () => {
   const { auth, state } = setupAuth();
 
-  state.config.callback({ error: 'access_denied' });
-  state.config.error_callback({ type: 'popup_closed' });
+  auth.signIn();
+  auth.completeSignIn(returnHash(state, { error: 'access_denied' }));
 
-  assert.deepEqual(state.events, [
-    { state: 'error', code: 'access_denied' },
-    { state: 'error', code: 'popup_closed' }
-  ]);
+  assert.deepEqual(state.events, [{ state: 'error', code: 'access_denied' }]);
   assert.equal(auth.getAccessToken(), null);
+});
+
+
+test('保存領域が使えなければ移動せずにエラーを通知する', () => {
+  const broken = { getItem() { throw new Error('x'); }, setItem() { throw new Error('x'); }, removeItem() {} };
+  const { auth, state } = setupAuth({ storage: broken });
+
+  auth.signIn();
+
+  assert.equal(state.navigated.length, 0);
+  assert.deepEqual(state.events, [{ state: 'error', code: 'storage_unavailable' }]);
 });

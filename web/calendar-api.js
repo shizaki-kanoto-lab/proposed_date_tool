@@ -1,12 +1,15 @@
 /**
- * Googleログイン（Google Identity Services のトークンモデル）と Calendar API の取得。
+ * Googleログイン（OAuth 2.0 のブラウザ向けフロー。ページごと Google へ移動して戻る）と
+ * Calendar API の取得。
  *
  * アクセストークンはメモリにのみ保持し、ブラウザの保存領域には書き込まない。
+ * 保存領域に置くのは、戻ってきた応答を照合するための使い捨ての state だけ。
  */
 
 import { normalizeApiEvents, normalizeCalendarList } from './core.js';
 
-const GIS_SCRIPT_URL = 'https://accounts.google.com/gsi/client';
+const AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth';
+const STATE_KEY = 'oauthState';
 const API_BASE = 'https://www.googleapis.com/calendar/v3';
 
 export const SCOPES = [
@@ -46,38 +49,6 @@ export class CalendarApiError extends Error {
  * ========================================== */
 
 /**
- * ログイン用スクリプトを読み込み google.accounts.oauth2 を返す。
- */
-export function loadGoogleIdentity(doc = document, win = window) {
-  const existing = win.google?.accounts?.oauth2;
-
-  if (existing) {
-    return Promise.resolve(existing);
-  }
-
-  return new Promise((resolve, reject) => {
-    const script = doc.createElement('script');
-
-    script.src = GIS_SCRIPT_URL;
-    script.async = true;
-    script.onload = () => {
-      const oauth2 = win.google?.accounts?.oauth2;
-
-      if (oauth2) {
-        resolve(oauth2);
-      } else {
-        reject(new Error('Googleログインを初期化できませんでした。'));
-      }
-    };
-    script.onerror = () =>
-      reject(new Error('Googleログインを読み込めませんでした。'));
-
-    doc.head.appendChild(script);
-  });
-}
-
-
-/**
  * 同意画面で一部のスコープだけが許可された場合に false を返す。
  */
 export function hasAllScopes(grantedScope) {
@@ -88,16 +59,70 @@ export function hasAllScopes(grantedScope) {
 
 
 /**
+ * 戻り先の URL。index.html 付きで開かれても、登録した URI と一致させる。
+ */
+export function getRedirectUri(loc) {
+  return loc.origin + loc.pathname.replace(/index\.html$/, '');
+}
+
+
+/**
+ * Google の同意画面の URL。
+ */
+export function buildAuthUrl({ clientId, redirectUri, state }) {
+  const params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: 'token',
+    scope: SCOPES.join(' '),
+    include_granted_scopes: 'false',
+    prompt: 'select_account',
+    state
+  });
+
+  return `${AUTH_ENDPOINT}?${params}`;
+}
+
+
+/**
+ * 戻ってきた URL の # 以降を読む。ログインの応答でなければ null。
+ */
+export function parseAuthResponse(hash) {
+  const params = new URLSearchParams(String(hash || '').replace(/^#/, ''));
+
+  if (!params.has('access_token') && !params.has('error')) {
+    return null;
+  }
+
+  return Object.fromEntries(params);
+}
+
+
+function randomState(cryptoImpl) {
+  const bytes = new Uint8Array(16);
+
+  cryptoImpl.getRandomValues(bytes);
+
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+
+/**
  * onChange には次のいずれかが渡される。
  *   { state: 'signedIn' }
  *   { state: 'expired' }          期限切れ、または 401
  *   { state: 'partial' }          一部のスコープが拒否された
- *   { state: 'error', code }      ポップアップの失敗や同意の拒否
+ *   { state: 'error', code }      同意の拒否や、応答の照合の失敗
+ *
+ * storage にはタブを閉じると消えるセッション用の保存領域を渡す。state の照合にだけ使う。
  */
 export function createAuth({
   clientId,
-  oauth2,
+  redirectUri,
+  storage,
+  navigate,
   onChange,
+  cryptoImpl = globalThis.crypto,
   now = Date.now,
   setTimer = setTimeout,
   clearTimer = clearTimeout
@@ -125,42 +150,72 @@ export function createAuth({
     onChange({ state: 'expired' });
   }
 
-  function handleTokenResponse(response) {
-    clear();
+  function takeSavedState() {
+    let saved = null;
 
-    if (response.error) {
-      onChange({ state: 'error', code: response.error });
-      return;
+    try {
+      saved = storage.getItem(STATE_KEY);
+      storage.removeItem(STATE_KEY);
+    } catch {
+      saved = null;
     }
 
-    if (!hasAllScopes(response.scope)) {
-      onChange({ state: 'partial' });
-      return;
-    }
-
-    const lifetimeMs = Number(response.expires_in) * 1000;
-
-    token = response.access_token;
-    expiresAt = now() + lifetimeMs;
-    timer = setTimer(expire, Math.max(lifetimeMs - TOKEN_EXPIRY_MARGIN_MS, 0));
-
-    onChange({ state: 'signedIn' });
+    return saved;
   }
 
-  const tokenClient = oauth2.initTokenClient({
-    client_id: clientId,
-    scope: SCOPES.join(' '),
-    prompt: 'select_account',
-    include_granted_scopes: false,
-    callback: handleTokenResponse,
-    error_callback: error =>
-      onChange({ state: 'error', code: (error && error.type) || 'unknown' })
-  });
-
   return {
-    /** ポップアップを開くので、クリックの処理の中から同期的に呼ぶこと */
+    /** 同じタブで Google の同意画面へ移動する */
     signIn() {
-      tokenClient.requestAccessToken();
+      const state = randomState(cryptoImpl);
+
+      try {
+        storage.setItem(STATE_KEY, state);
+      } catch {
+        onChange({ state: 'error', code: 'storage_unavailable' });
+        return;
+      }
+
+      navigate(buildAuthUrl({ clientId, redirectUri, state }));
+    },
+
+    /**
+     * 戻ってきた URL の # 以降を処理する。ログインの応答だったら true。
+     * 呼び出し側は、true のとき URL から # 以降を消すこと。
+     */
+    completeSignIn(hash) {
+      const response = parseAuthResponse(hash);
+
+      if (!response) {
+        return false;
+      }
+
+      clear();
+
+      const saved = takeSavedState();
+
+      if (!saved || response.state !== saved) {
+        onChange({ state: 'error', code: 'state_mismatch' });
+        return true;
+      }
+
+      if (response.error) {
+        onChange({ state: 'error', code: response.error });
+        return true;
+      }
+
+      if (!hasAllScopes(response.scope)) {
+        onChange({ state: 'partial' });
+        return true;
+      }
+
+      const lifetimeMs = Number(response.expires_in) * 1000;
+
+      token = response.access_token;
+      expiresAt = now() + lifetimeMs;
+      timer = setTimer(expire, Math.max(lifetimeMs - TOKEN_EXPIRY_MARGIN_MS, 0));
+
+      onChange({ state: 'signedIn' });
+      return true;
     },
 
     /** 有効なトークン。なければ null */
@@ -175,7 +230,6 @@ export function createAuth({
     invalidate: expire
   };
 }
-
 
 /* ==========================================
  * Calendar API
