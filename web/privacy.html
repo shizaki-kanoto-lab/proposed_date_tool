@@ -30,7 +30,12 @@
 
     <p class="policy-meta">
       運営者：隠れ家クロウラ<br>
-      制定日：2026年11月9日
+      制定日：2026年11月9日<br>
+      改定日：2026年11月15日
+    </p>
+
+    <p class="policy-lang">
+      <a href="#en" lang="en">English version</a>
     </p>
 
 
@@ -87,7 +92,19 @@
     </ul>
 
 
-    <h2>5. Google API サービスのユーザーデータに関するポリシーへの準拠</h2>
+    <h2>5. 情報の保護</h2>
+
+    <ul>
+      <li>本ツールには運営者のサーバーがありません。Googleアカウントから受け取った情報が運営者のもとに届くことはなく、運営者が保管することもありません。</li>
+      <li>ページの配信と、GoogleのログインおよびGoogle Calendar APIとの通信は、すべてHTTPS（TLS）で暗号化されます。</li>
+      <li>ページにはコンテンツセキュリティポリシー（CSP）を設定し、読み込めるスクリプトを本ツール自身のものとGoogleのログイン用のものに、通信先をGoogleのログインとGoogle APIのサーバーに限っています。</li>
+      <li>アクセストークンはブラウザのメモリにだけ置き、ストレージやCookieには保存しません。ページを閉じると消え、Googleが定める有効期限（通常1時間）を過ぎると使えなくなります。</li>
+      <li>求める権限は読み取り専用の2つだけで、予定を作成・変更・削除することはできません。</li>
+      <li>ソースコードは<a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool" rel="noopener noreferrer">GitHub</a>で公開しており、誰でも処理の内容を確かめられます。</li>
+    </ul>
+
+
+    <h2>6. Google API サービスのユーザーデータに関するポリシーへの準拠</h2>
 
     <p>
       本ツールによるGoogle APIから受け取った情報の使用および他のアプリへの転送は、
@@ -97,7 +114,7 @@
     </p>
 
 
-    <h2>6. アクセス権の取り消し</h2>
+    <h2>7. アクセス権の取り消し</h2>
 
     <p>
       本ツールへのアクセス権は、
@@ -106,7 +123,7 @@
     </p>
 
 
-    <h2>7. お問い合わせ</h2>
+    <h2>8. お問い合わせ</h2>
 
     <p>
       本ポリシーや本ツールに関するお問い合わせは、
@@ -117,7 +134,7 @@
     </p>
 
 
-    <h2>8. 改定</h2>
+    <h2>9. 改定</h2>
 
     <p>
       本ポリシーを改定する場合は、このページで内容と改定日をお知らせします。
@@ -125,6 +142,122 @@
       <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool/commits/main/web/privacy.html" rel="noopener noreferrer">GitHubのコミット履歴</a>
       で確認できます。
     </p>
+
+
+    <section id="en" lang="en" class="policy-en">
+
+      <h1>Privacy Policy (English)</h1>
+
+      <p>
+        This page explains how the web version of 空き日程抽出ツール (Free Date Finder, "the app")
+        handles information received from your Google Account.
+        If this English version and the Japanese version above differ, the Japanese version prevails.
+      </p>
+
+      <p class="policy-meta">
+        Operator: 隠れ家クロウラ (Kakurega Kuroura)<br>
+        Effective: November 9, 2026 / Last updated: November 15, 2026
+      </p>
+
+
+      <h2>1. Data the app accesses</h2>
+
+      <p>With your permission after you sign in with Google, the app reads the following from the Google Calendar API:</p>
+
+      <ul>
+        <li>The list of calendars you own (calendar name, ID, and whether it is your primary calendar)</li>
+        <li>Events on those calendars within the date range you choose (title, start and end time, whether cancelled, event type, whether the event is marked as "free", and your own response to the invitation)</li>
+        <li>The ID of your primary calendar (usually your email address), to show which account is signed in</li>
+      </ul>
+
+      <p>The app requests only these two scopes. Both are read-only; the app cannot create, change or delete events.</p>
+
+      <ul>
+        <li><code>https://www.googleapis.com/auth/calendar.calendarlist.readonly</code></li>
+        <li><code>https://www.googleapis.com/auth/calendar.events.owned.readonly</code></li>
+      </ul>
+
+
+      <h2>2. How the data is used</h2>
+
+      <p>
+        The data is used only to determine which days in the chosen range are free and to show them on the screen.
+        All processing happens inside your browser.
+        Event titles and exact times appear on the screen only when you turn on the debug view.
+      </p>
+
+
+      <h2>3. Data sharing and transfer</h2>
+
+      <p>
+        The app communicates only with Google Sign-In (Google Identity Services) and the Google Calendar API.
+        It never sends the data it reads to the operator or to any third party, and never sells or shares it.
+        The app uses no analytics or advertising tools.
+      </p>
+
+      <p>
+        The pages are served by GitHub Pages. Access logs created when you open a page (such as IP addresses)
+        are handled by GitHub under its privacy statement. The operator does not receive these logs.
+      </p>
+
+
+      <h2>4. Data retention and deletion</h2>
+
+      <ul>
+        <li>The access token obtained at sign-in is kept only in browser memory while the page is open, and is never stored.</li>
+        <li>Event data is never stored. It is gone when you close or reload the page.</li>
+        <li>Your daytime and nighttime settings and the IDs of calendars you exclude are saved in your browser's localStorage so they can be reused next time. This data never leaves your browser and is deleted when you clear the site data in your browser.</li>
+      </ul>
+
+
+      <h2>5. Data protection</h2>
+
+      <ul>
+        <li>The app has no server of its own. Data received from your Google Account never reaches the operator and is never kept by the operator.</li>
+        <li>Page delivery and all communication with Google Sign-In and the Google Calendar API are encrypted with HTTPS (TLS).</li>
+        <li>The pages set a Content Security Policy (CSP) that allows only the app's own scripts and Google's sign-in script, and limits connections to Google Sign-In and Google API servers.</li>
+        <li>The access token is kept only in browser memory, never in storage or cookies. It is discarded when you close the page and expires after the period set by Google (usually one hour).</li>
+        <li>The app requests only two read-only scopes and cannot create, change or delete events.</li>
+        <li>The source code is public on <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool" rel="noopener noreferrer">GitHub</a>, so anyone can check what the app does.</li>
+      </ul>
+
+
+      <h2>6. Compliance with the Google API Services User Data Policy</h2>
+
+      <p>
+        The app's use and transfer to any other app of information received from Google APIs will adhere to the
+        <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener noreferrer">Google API Services User Data Policy</a>,
+        including the Limited Use requirements.
+      </p>
+
+
+      <h2>7. Revoking access</h2>
+
+      <p>
+        You can revoke the app's access at any time on the
+        <a href="https://myaccount.google.com/connections" rel="noopener noreferrer">third-party connections page of your Google Account</a>.
+      </p>
+
+
+      <h2>8. Contact</h2>
+
+      <p>
+        For questions about this policy or the app, please use
+        <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool/issues" rel="noopener noreferrer">GitHub Issues</a>.
+        To report a security issue, please use the
+        <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool/security/advisories/new" rel="noopener noreferrer">vulnerability report form</a>.
+      </p>
+
+
+      <h2>9. Changes</h2>
+
+      <p>
+        If this policy changes, the new content and date will be posted on this page.
+        The history of changes is available in the
+        <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool/commits/main/web/privacy.html" rel="noopener noreferrer">GitHub commit history</a>.
+      </p>
+
+    </section>
 
 
     <p class="policy-back">

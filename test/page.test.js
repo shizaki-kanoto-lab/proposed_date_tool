@@ -83,6 +83,17 @@ test('プライバシーポリシーはスクリプトを読み込まず、ト�
 });
 
 
+test('プライバシーポリシーに情報の保護の節と英語版がある', () => {
+  const policy = read('privacy.html');
+
+  assert.ok(policy.includes('情報の保護'));
+  assert.ok(policy.includes('id="en" lang="en"'));
+  assert.ok(policy.includes('href="#en"'));
+  assert.ok(policy.includes('Data protection'));
+  assert.ok(policy.includes('Limited Use requirements'));
+});
+
+
 test('利用規約はスクリプトを読み込まず、トップから辿れる', () => {
   const terms = read('terms.html');
   const csp = terms.match(/Content-Security-Policy" content="([^"]+)"/)[1];
