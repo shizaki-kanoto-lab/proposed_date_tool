@@ -10,7 +10,7 @@ import {
   createAuth,
   createCalendarClient,
   describeError,
-  loadGoogleIdentity
+  getRedirectUri
 } from './calendar-api.js';
 import { GOOGLE_CLIENT_ID } from './config.js';
 import {
@@ -289,7 +289,24 @@ function bindEvents() {
  * ログイン
  * ========================================== */
 
-async function initializeAuth() {
+// ログインで Google へ移動している間、入力した期間を覚えておくキー
+const PENDING_DATES_KEY = 'pendingDates';
+
+
+function getSessionStorage() {
+
+  try {
+
+    return window.sessionStorage;
+
+  } catch (error) {
+
+    return null;
+  }
+}
+
+
+function initializeAuth() {
 
   if (!GOOGLE_CLIENT_ID) {
 
@@ -302,50 +319,117 @@ async function initializeAuth() {
   }
 
 
-  try {
-
-    const oauth2 =
-      await loadGoogleIdentity();
-
-
-    auth =
-      createAuth({
-        clientId: GOOGLE_CLIENT_ID,
-        oauth2: oauth2,
-        onChange: handleAuthChange
-      });
+  auth =
+    createAuth({
+      clientId: GOOGLE_CLIENT_ID,
+      redirectUri: getRedirectUri(window.location),
+      storage: getSessionStorage(),
+      navigate: url => window.location.assign(url),
+      onChange: handleAuthChange
+    });
 
 
-    calendarClient =
-      createCalendarClient({
-        auth: auth
-      });
+  calendarClient =
+    createCalendarClient({
+      auth: auth
+    });
 
 
-    document.getElementById(
-      'loginButton'
-    ).disabled = false;
+  restorePendingDates();
 
-  } catch (error) {
 
-    showStatus(
-      'error',
-      error.message +
-      ' 広告ブロッカーなどが読み込みを止めていないか確認してください。'
+  /*
+   * Google から戻ってきたときは、URL の # 以降にトークンが入っている。
+   * 読み取ったらすぐ URL から消し、履歴にも残さない。
+   */
+  const handled =
+    auth.completeSignIn(
+      window.location.hash
+    );
+
+
+  if (handled) {
+
+    window.history.replaceState(
+      null,
+      '',
+      window.location.pathname + window.location.search
     );
   }
+
+
+  document.getElementById(
+    'loginButton'
+  ).disabled = false;
 }
 
 
 /*
- * ポップアップがブロックされないよう、
- * クリックの処理の中から同期的に開く。
+ * 同じタブで Google の同意画面へ移動する。
+ * 戻ってきたときのために、入力中の期間だけ一時的に覚えておく。
  */
 function signIn() {
 
-  if (auth) {
+  if (!auth) {
 
-    auth.signIn();
+    return;
+  }
+
+
+  const storage =
+    getSessionStorage();
+
+
+  try {
+
+    storage.setItem(
+      PENDING_DATES_KEY,
+      JSON.stringify({
+        start: document.getElementById('startDate').value,
+        end: document.getElementById('endDate').value
+      })
+    );
+
+  } catch (error) {
+
+    // 期間を覚えられなくてもログインは続ける
+  }
+
+
+  auth.signIn();
+}
+
+
+function restorePendingDates() {
+
+  const storage =
+    getSessionStorage();
+
+
+  try {
+
+    const saved =
+      JSON.parse(
+        storage.getItem(
+          PENDING_DATES_KEY
+        ) || 'null'
+      );
+
+
+    storage.removeItem(
+      PENDING_DATES_KEY
+    );
+
+
+    if (saved && saved.start && saved.end) {
+
+      document.getElementById('startDate').value = saved.start;
+      document.getElementById('endDate').value = saved.end;
+    }
+
+  } catch (error) {
+
+    // 読めなければ初期値のまま
   }
 }
 
@@ -415,15 +499,15 @@ function getAuthErrorMessage(
   code
 ) {
 
-  if (code === 'popup_closed') {
+  if (code === 'state_mismatch') {
 
-    return 'ログインが完了する前に画面が閉じられました。もう一度お試しください。';
+    return 'ログインの応答を確認できませんでした。もう一度「Googleでログイン」を押してください。';
   }
 
 
-  if (code === 'popup_failed_to_open') {
+  if (code === 'storage_unavailable') {
 
-    return 'ログイン画面を開けませんでした。ポップアップのブロックを解除してください。';
+    return 'ブラウザの設定によりログインを始められませんでした。シークレットモードやサイトデータのブロックを解除して、もう一度お試しください。';
   }
 
 

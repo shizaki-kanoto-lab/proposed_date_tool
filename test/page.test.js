@@ -21,11 +21,12 @@ test('CSP に反するインラインの処理と指定がない', () => {
 });
 
 
-test('外部通信は Google のログインと Calendar API のみ', () => {
+test('外部通信は Google の API のみで、外部スクリプトを読み込まない', () => {
   const csp = /Content-Security-Policy" content="([^"]+)"/.exec(html)[1];
   const hosts = new Set(csp.match(/https:\/\/[^\s;/]+/g));
 
-  assert.deepEqual([...hosts].sort(), ['https://accounts.google.com', 'https://www.googleapis.com']);
+  assert.deepEqual([...hosts].sort(), ['https://www.googleapis.com']);
+  assert.match(csp, /script-src 'self';/);
   assert.match(csp, /default-src 'none'/);
   assert.doesNotMatch(csp, /unsafe/);
 });
@@ -38,6 +39,9 @@ test('GAS の呼び出しが残っていない', () => {
 
 test('トークンをブラウザに保存しない', () => {
   assert.doesNotMatch(read('calendar-api.js'), /localStorage|sessionStorage|indexedDB|document\.cookie/);
+  // 保存領域に書くのは、ログインの照合用の state と、移動中の入力期間だけ
+  assert.deepEqual(read('calendar-api.js').match(/\.setItem\([^,]+/g), ['.setItem(STATE_KEY']);
+  assert.deepEqual(app.match(/storage\.setItem\(\s*[^,]+/g).map(m => m.replace(/\s+/g, '')), ['storage.setItem(PENDING_DATES_KEY']);
   assert.equal(app.match(/localStorage\.setItem/g).length, 1);
   assert.match(app, /'proposedDateSettings'/);
 });

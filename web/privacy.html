@@ -72,7 +72,7 @@
     <h2>3. 情報の送信と共有</h2>
 
     <p>
-      本ツールが通信するのは、Googleのログイン（Google Identity Services）とGoogle Calendar APIだけです。
+      本ツールが通信するのは、Googleのログイン（OAuth 2.0）とGoogle Calendar APIだけです。
       読み取った情報を運営者や第三者のサーバーへ送信することはなく、販売・共有もしません。
       アクセス解析や広告のツールも使っていません。
     </p>
@@ -86,7 +86,8 @@
     <h2>4. 情報の保存</h2>
 
     <ul>
-      <li>ログインで得たアクセストークンは、ページを開いている間だけブラウザのメモリに置き、保存しません。</li>
+      <li>ログインで得たアクセストークンは、Googleから戻ってきたページのURL（#以降）から読み取ったあと、すぐにURLと閲覧履歴から消します。その後はページを開いている間だけブラウザのメモリに置き、保存しません。</li>
+      <li>ログインの途中では、Googleからの応答を照合するための使い捨ての文字列と、入力中の期間を、タブを閉じると消える保存領域（sessionStorage）に一時的に置きます。どちらもGoogleから戻ってきた時点で削除します。</li>
       <li>予定の内容は保存しません。ページを閉じるか再読み込みすると消えます。</li>
       <li>昼・夜の時間設定と、除外するカレンダーのIDは、次回も使えるよう利用者のブラウザ（localStorage）に保存します。このデータはブラウザの外へ送信されず、ブラウザのサイトデータを削除すると消えます。</li>
     </ul>
@@ -97,7 +98,7 @@
     <ul>
       <li>本ツールには運営者のサーバーがありません。Googleアカウントから受け取った情報が運営者のもとに届くことはなく、運営者が保管することもありません。</li>
       <li>ページの配信と、GoogleのログインおよびGoogle Calendar APIとの通信は、すべてHTTPS（TLS）で暗号化されます。</li>
-      <li>ページにはコンテンツセキュリティポリシー（CSP）を設定し、読み込めるスクリプトを本ツール自身のものとGoogleのログイン用のものに、通信先をGoogleのログインとGoogle APIのサーバーに限っています。</li>
+      <li>ページにはコンテンツセキュリティポリシー（CSP）を設定し、読み込めるスクリプトを本ツール自身のものに、通信先をGoogle APIのサーバーに限っています。</li>
       <li>アクセストークンはブラウザのメモリにだけ置き、ストレージやCookieには保存しません。ページを閉じると消え、Googleが定める有効期限（通常1時間）を過ぎると使えなくなります。</li>
       <li>求める権限は読み取り専用の2つだけで、予定を作成・変更・削除することはできません。</li>
       <li>ソースコードは<a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool" rel="noopener noreferrer">GitHub</a>で公開しており、誰でも処理の内容を確かめられます。</li>
@@ -190,7 +191,7 @@
       <h2>3. Data sharing and transfer</h2>
 
       <p>
-        The app communicates only with Google Sign-In (Google Identity Services) and the Google Calendar API.
+        The app communicates only with Google Sign-In (OAuth 2.0) and the Google Calendar API.
         It never sends the data it reads to the operator or to any third party, and never sells or shares it.
         The app uses no analytics or advertising tools.
       </p>
@@ -204,7 +205,8 @@
       <h2>4. Data retention and deletion</h2>
 
       <ul>
-        <li>The access token obtained at sign-in is kept only in browser memory while the page is open, and is never stored.</li>
+        <li>The access token obtained at sign-in is read from the URL fragment (after #) of the page Google returns you to, and is immediately removed from the URL and the browsing history. After that it is kept only in browser memory while the page is open, and is never stored.</li>
+        <li>During sign-in, a one-time value used to verify Google's response and the date range you entered are kept temporarily in sessionStorage, which is cleared when the tab is closed. Both are deleted as soon as you return from Google.</li>
         <li>Event data is never stored. It is gone when you close or reload the page.</li>
         <li>Your daytime and nighttime settings and the IDs of calendars you exclude are saved in your browser's localStorage so they can be reused next time. This data never leaves your browser and is deleted when you clear the site data in your browser.</li>
       </ul>
@@ -215,7 +217,7 @@
       <ul>
         <li>The app has no server of its own. Data received from your Google Account never reaches the operator and is never kept by the operator.</li>
         <li>Page delivery and all communication with Google Sign-In and the Google Calendar API are encrypted with HTTPS (TLS).</li>
-        <li>The pages set a Content Security Policy (CSP) that allows only the app's own scripts and Google's sign-in script, and limits connections to Google Sign-In and Google API servers.</li>
+        <li>The pages set a Content Security Policy (CSP) that allows only the app's own scripts and limits connections to Google API servers.</li>
         <li>The access token is kept only in browser memory, never in storage or cookies. It is discarded when you close the page and expires after the period set by Google (usually one hour).</li>
         <li>The app requests only two read-only scopes and cannot create, change or delete events.</li>
         <li>The source code is public on <a href="https://github.com/shizaki-kanoto-lab/proposed_date_tool" rel="noopener noreferrer">GitHub</a>, so anyone can check what the app does.</li>
