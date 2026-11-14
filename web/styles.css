@@ -362,7 +362,7 @@ textarea {
 .login-notice {
   max-width: 700px;
   box-sizing: border-box;
-  margin: 0 0 4px;
+  margin: 10px 0 0;
   padding: 8px 12px;
   border-left: 4px solid #00c7b7;
   border-radius: 4px;
