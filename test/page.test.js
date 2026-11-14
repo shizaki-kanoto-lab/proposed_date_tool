@@ -106,6 +106,15 @@ test('利用規約はスクリプトを読み込まず、トップから辿れ�
 });
 
 
+test('利用規約に英語版がある', () => {
+  const terms = read('terms.html');
+
+  assert.ok(terms.includes('id="en" lang="en"'));
+  assert.ok(terms.includes('href="#en"'));
+  assert.ok(terms.includes('Terms of Service (English)'));
+});
+
+
 test('リンクを共有したときのカード（OGP）の画像が web/ にある', () => {
   const image = /property="og:image" content="([^"]+)"/.exec(html)[1];
   const base = 'https://shizaki-kanoto.is-a.dev/proposed_date_tool/';
