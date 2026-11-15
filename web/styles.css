@@ -173,6 +173,8 @@ body {
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
+  /* ログイン前後で行の高さが変わり、下の内容がずれないよう、ボタンの高さを確保する */
+  min-height: 41px;
   gap: 8px 12px;
   margin-top: 10px;
   font-size: 13px;
@@ -501,6 +503,24 @@ textarea {
 
 :root[data-theme="dark"] .theme-toggle .moon {
   display: none;
+}
+
+/* ログイン中のメールアドレス（押すとアカウントを切り替える） */
+button.account-switch {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--accent-text);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+button.account-switch:hover {
+  background: none;
+  text-decoration-thickness: 2px;
 }
 
 .login-button:disabled {

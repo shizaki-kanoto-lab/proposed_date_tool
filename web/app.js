@@ -219,6 +219,8 @@ function bindEvents() {
 
   const clicks = {
     loginButton: signIn,
+    // アカウント選択の画面が出るので、同じ処理で切り替えられる
+    switchAccountButton: signIn,
     searchButton: searchDates,
     copyButton: copyResult,
     clearButton: clearResult,
@@ -445,6 +447,11 @@ function handleAuthChange(
     ).hidden = true;
 
 
+    document.getElementById(
+      'accountStatus'
+    ).hidden = false;
+
+
     showStatus(
       '',
       ''
@@ -463,9 +470,8 @@ function handleAuthChange(
 
 
   document.getElementById(
-    'currentUserEmail'
-  ).textContent =
-    '未ログイン';
+    'accountStatus'
+  ).hidden = true;
 
 
   if (change.state === 'expired') {
