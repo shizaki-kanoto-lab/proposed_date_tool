@@ -91,6 +91,8 @@ body {
   max-width: 760px;
   margin: 0 auto;
   padding: 30px;
+  /* 右上に固定した切り替えボタンの下からヘッダーを始める */
+  padding-top: 64px;
   box-sizing: border-box;
 }
 
@@ -131,6 +133,8 @@ body {
 
 .policy {
   line-height: 1.7;
+  /* 規約のページには切り替えボタンがないので、上の余白は元のまま */
+  padding-top: 30px;
 }
 
 .policy h1 {
@@ -453,7 +457,8 @@ textarea {
   position: fixed;
   z-index: 10;
   top: max(12px, env(safe-area-inset-top));
-  right: max(calc(max(0px, (100% - 1120px) / 2) + var(--toggle-gutter, 16px)), env(safe-area-inset-right));
+  /* ツール本体（.container の幅 760px・余白 30px）の右端にそろえる */
+  right: max(calc(max(0px, (100% - 760px) / 2) + 30px), env(safe-area-inset-right));
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -467,12 +472,6 @@ textarea {
   cursor: pointer;
   box-shadow: 0 6px 18px -10px rgba(0, 0, 0, .45);
   transition: border-color .15s ease;
-}
-
-@media (min-width: 640px) {
-  .theme-toggle {
-    --toggle-gutter: 24px;
-  }
 }
 
 .theme-toggle:hover {
@@ -558,6 +557,11 @@ body {
 /* 右上に固定した切り替えボタンと重ならないように */
 .header {
   padding-right: 44px;
+  box-sizing: border-box;
+}
+
+.theme-toggle {
+  right: max(12px, env(safe-area-inset-right));
 }
 
 .account-info {
