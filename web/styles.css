@@ -86,11 +86,12 @@ body {
   background: var(--bg);
 }
 
+/* ポートフォリオ・紹介ページと同じ幅（最大880px、左右16px）にそろえる */
 .container {
   width: 100%;
-  max-width: 760px;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 30px;
+  padding: 30px 16px;
   box-sizing: border-box;
 }
 
@@ -101,13 +102,13 @@ body {
 .setting-section,
 .debug-toggle {
   width: 100%;
-  max-width: 700px;
+  max-width: 848px;
 }
 
 /* タイトルの下にログインの行を置く。右上は切り替えボタンのために空けておく */
 .header {
   display: block;
-  max-width: 700px;
+  max-width: 848px;
   margin-bottom: 10px;
 }
 
@@ -262,7 +263,7 @@ button.primary:hover {
 
 textarea {
   width: 100%;
-  max-width: 700px;
+  max-width: 848px;
   height: 300px;
   padding: 12px;
   box-sizing: border-box;
@@ -291,7 +292,7 @@ textarea {
   margin-top: 25px;
   padding: 15px;
   background: var(--panel);
-  max-width: 700px;
+  max-width: 848px;
   box-sizing: border-box;
 }
 
@@ -364,7 +365,7 @@ textarea {
 }
 
 .setting-section {
-  max-width: 700px;
+  max-width: 848px;
   margin-top: 25px;
   margin-bottom: 20px;
   padding: 15px;
@@ -414,7 +415,7 @@ textarea {
   margin-top: 20px;
   padding: 10px 15px;
   background: var(--panel);
-  max-width: 700px;
+  max-width: 848px;
   box-sizing: border-box;
 }
 
@@ -456,8 +457,8 @@ textarea {
   position: fixed;
   z-index: 10;
   top: max(12px, env(safe-area-inset-top));
-  /* ツール本体（.container の幅 760px・余白 30px）の右端にそろえる */
-  right: max(calc(max(0px, (100% - 760px) / 2) + 30px), env(safe-area-inset-right));
+  /* ツール本体（.container の幅 880px・余白 16px）の右端にそろえる */
+  right: max(calc(max(0px, (100% - 880px) / 2) + 16px), env(safe-area-inset-right));
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -506,7 +507,7 @@ textarea {
 }
 
 .login-notice {
-  max-width: 700px;
+  max-width: 848px;
   box-sizing: border-box;
   margin: 10px 0 0;
   padding: 8px 12px;
@@ -536,9 +537,9 @@ body {
 /* ページ幅 */
 .container {
   width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 16px 12px;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 16px;
   box-sizing: border-box;
 }
 
@@ -551,10 +552,6 @@ body {
 .header h1 {
   font-size: 26px;
   margin: 0 0 6px;
-}
-
-.theme-toggle {
-  right: max(12px, env(safe-area-inset-right));
 }
 
 .account-info {
