@@ -1,8 +1,89 @@
+/* 画面の色。ライト／ダークはここだけで切り替える */
+:root {
+  color-scheme: light;
+  --bg: #fff;
+  --text: #333;
+  --muted: #666;
+  --panel: #f5f5f5;
+  --surface: #fff;
+  --surface-alt: #fafafa;
+  --border: #ddd;
+  --border-strong: #bbb;
+  --accent: #00c7b7;
+  --accent-hover: #00b3a5;
+  --accent-border: #00bfae;
+  --accent-text: #008f83;
+  --on-accent: #fff;
+  --button-bg: #fff;
+  --button-hover: #f0fffd;
+  --error: #d00;
+  --success: #1565c0;
+  --warning: #b35c00;
+  --daytime: #fff3cd;
+  --nighttime: #dbeafe;
+  --notice-bg: #e8f9f7;
+  --notice-text: #1e4a46;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #16191d;
+    --text: #e4e6e8;
+    --muted: #a4abb3;
+    --panel: #22272d;
+    --surface: #2b3138;
+    --surface-alt: #1d2126;
+    --border: #3b434c;
+    --border-strong: #4e5862;
+    --accent: #00a597;
+    --accent-hover: #00b8a9;
+    --accent-border: #2bb5a8;
+    --accent-text: #5fd9cc;
+    --on-accent: #fff;
+    --button-bg: #1d2126;
+    --button-hover: #1b3330;
+    --error: #ff7a7a;
+    --success: #7cb6ff;
+    --warning: #f2a65e;
+    --daytime: #3d3520;
+    --nighttime: #1f3049;
+    --notice-bg: #163330;
+    --notice-text: #c3eee8;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #16191d;
+  --text: #e4e6e8;
+  --muted: #a4abb3;
+  --panel: #22272d;
+  --surface: #2b3138;
+  --surface-alt: #1d2126;
+  --border: #3b434c;
+  --border-strong: #4e5862;
+  --accent: #00a597;
+  --accent-hover: #00b8a9;
+  --accent-border: #2bb5a8;
+  --accent-text: #5fd9cc;
+  --on-accent: #fff;
+  --button-bg: #1d2126;
+  --button-hover: #1b3330;
+  --error: #ff7a7a;
+  --success: #7cb6ff;
+  --warning: #f2a65e;
+  --daytime: #3d3520;
+  --nighttime: #1f3049;
+  --notice-bg: #163330;
+  --notice-text: #c3eee8;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  color: #333;
-  background: #fff;
+  color: var(--text);
+  background: var(--bg);
 }
 
 .container {
@@ -65,7 +146,7 @@ body {
 }
 
 .policy-meta {
-  color: #666;
+  color: var(--muted);
   font-size: 13px;
 }
 
@@ -76,7 +157,7 @@ body {
 .policy-en {
   margin-top: 48px;
   padding-top: 24px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--border);
 }
 
 .policy-en h1 {
@@ -85,7 +166,7 @@ body {
 
 .account-info {
   font-size: 13px;
-  color: #666;
+  color: var(--muted);
   text-align: right;
 }
 
@@ -140,10 +221,10 @@ select {
 
 button {
   padding: 9px 18px;
-  border: 1px solid #00bfae;
+  border: 1px solid var(--accent-border);
   border-radius: 6px;
-  background: white;
-  color: #008f83;
+  background: var(--button-bg);
+  color: var(--accent-text);
   cursor: pointer;
   font-size: 14px;
 }
@@ -156,16 +237,16 @@ button {
 }
 
 button:hover {
-  background: #f0fffd;
+  background: var(--button-hover);
 }
 
 button.primary {
-  background: #00c7b7;
-  color: white;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 button.primary:hover {
-  background: #00b3a5;
+  background: var(--accent-hover);
 }
 
 .result-area {
@@ -182,6 +263,9 @@ textarea {
   font-size: 15px;
   line-height: 1.6;
   resize: vertical;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
 }
 
 .buttons {
@@ -199,7 +283,7 @@ textarea {
 .info {
   margin-top: 25px;
   padding: 15px;
-  background: #f5f5f5;
+  background: var(--panel);
   max-width: 700px;
   box-sizing: border-box;
 }
@@ -218,11 +302,11 @@ textarea {
 }
 
 .error {
-  color: #d00;
+  color: var(--error);
 }
 
 .success {
-  color: #1565c0;
+  color: var(--success);
 }
 
 .debug {
@@ -231,10 +315,10 @@ textarea {
 }
 
 .debug-day {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   margin-bottom: 10px;
   padding: 12px;
-  background: #fafafa;
+  background: var(--surface-alt);
 }
 
 .debug-title {
@@ -246,15 +330,15 @@ textarea {
 .event {
   margin: 4px 0;
   padding: 4px 8px;
-  background: white;
+  background: var(--surface);
 }
 
 .daytime {
-  background: #fff3cd;
+  background: var(--daytime);
 }
 
 .nighttime {
-  background: #dbeafe;
+  background: var(--nighttime);
 }
 
 .detail-area {
@@ -264,12 +348,12 @@ textarea {
 .detail-content {
   margin-top: 10px;
   padding: 10px;
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--surface);
+  border: 1px solid var(--border);
 }
 
 .loading-detail {
-  color: #666;
+  color: var(--muted);
 }
 
 .setting-section {
@@ -277,7 +361,7 @@ textarea {
   margin-top: 25px;
   margin-bottom: 20px;
   padding: 15px;
-  background: #f5f5f5;
+  background: var(--panel);
   box-sizing: border-box;
 }
 
@@ -299,8 +383,8 @@ textarea {
   max-height: 250px;
   overflow-y: auto;
   padding: 10px;
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--surface);
+  border: 1px solid var(--border);
 }
 
 .calendar-item {
@@ -315,14 +399,14 @@ textarea {
 .note {
   margin-top: 10px;
   font-size: 13px;
-  color: #666;
+  color: var(--muted);
   line-height: 1.6;
 }
 
 .debug-toggle {
   margin-top: 20px;
   padding: 10px 15px;
-  background: #f5f5f5;
+  background: var(--panel);
   max-width: 700px;
   box-sizing: border-box;
 }
@@ -336,9 +420,9 @@ textarea {
 .fixed-exclusion {
   margin-top: 10px;
   padding: 8px 10px;
-  background: white;
-  border: 1px solid #ddd;
-  color: #666;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
   font-size: 13px;
 }
 
@@ -357,11 +441,17 @@ textarea {
 
 /* Pages版で追加した表示 */
 .warning {
-  color: #b35c00;
+  color: var(--warning);
 }
 
 .login-button {
   margin-left: 8px;
+}
+
+.theme-button {
+  margin-left: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
 }
 
 .login-button:disabled {
@@ -374,10 +464,10 @@ textarea {
   box-sizing: border-box;
   margin: 10px 0 0;
   padding: 8px 12px;
-  border-left: 4px solid #00c7b7;
+  border-left: 4px solid var(--accent);
   border-radius: 4px;
-  background: #e8f9f7;
-  color: #1e4a46;
+  background: var(--notice-bg);
+  color: var(--notice-text);
   font-size: 14px;
   line-height: 1.6;
 }
@@ -420,6 +510,11 @@ body {
 .account-info {
   font-size: 14px;
   text-align: left;
+}
+
+.theme-button {
+  display: block;
+  margin: 8px 0 0;
 }
 
 /* 説明 */
@@ -470,11 +565,11 @@ input[type="date"] {
   line-height: 46px;
   box-sizing: border-box;
   font-size: 17px;
-  color: #333;
-  -webkit-text-fill-color: #333;
-  border: 1px solid #ccc;
+  color: var(--text);
+  -webkit-text-fill-color: var(--text);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .settings .field {
@@ -506,9 +601,9 @@ textarea {
   box-sizing: border-box;
   font-size: 17px;
   line-height: 1.7;
-  border: 1px solid #bbb;
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
-  background: #fff;
+  background: var(--surface);
 }
 
 /* コピー・クリア */

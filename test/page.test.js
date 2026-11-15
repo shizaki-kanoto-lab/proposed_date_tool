@@ -47,6 +47,28 @@ test('トークンをブラウザに保存しない', () => {
 });
 
 
+test('画面の色の切り替えは、表示の設定だけを保存する', () => {
+  const theme = read('theme.js');
+  const css = read('styles.css');
+
+  // 描画の前に色を決めるため、head でモジュールより先に読み込む
+  assert.ok(html.indexOf('<script src="theme.js"></script>') < html.indexOf('src="app.js"'));
+  assert.ok(html.indexOf('src="theme.js"') < html.indexOf('</head>'));
+  assert.ok(html.includes('id="themeButton"'));
+
+  assert.deepEqual(theme.match(/\.setItem\([^,]+/g), ['.setItem(THEME_KEY']);
+  assert.match(theme, /THEME_KEY = 'proposedDateTheme'/);
+  assert.doesNotMatch(theme, /sessionStorage|indexedDB|document\.cookie|fetch\(|XMLHttpRequest/);
+
+  // 端末の設定に合わせるダークと、手動のダーク・ライトの両方がある
+  assert.match(css, /@media \(prefers-color-scheme: dark\)\s*{\s*:root:not\(\[data-theme="light"\]\)/);
+  assert.match(css, /:root\[data-theme="dark"\]/);
+  // 色は :root の変数にまとめ、個別のルールに色を直書きしない
+  const rules = css.slice(css.indexOf('body {'));
+  assert.doesNotMatch(rules, /#[0-9a-f]{3,6}\b|\bwhite\b/i);
+});
+
+
 test('画面の要素が app.js の参照先とそろっている', () => {
   const ids = [...app.matchAll(/getElementById\(\s*'([^']+)'/g)].map(match => match[1]);
 
