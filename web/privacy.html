@@ -89,7 +89,7 @@
       <li>ログインで得たアクセストークンは、Googleから戻ってきたページのURL（#以降）から読み取ったあと、すぐにURLと閲覧履歴から消します。その後はページを開いている間だけブラウザのメモリに置き、保存しません。</li>
       <li>ログインの途中では、Googleからの応答を照合するための使い捨ての文字列と、入力中の期間を、タブを閉じると消える保存領域（sessionStorage）に一時的に置きます。どちらもGoogleから戻ってきた時点で削除します。</li>
       <li>予定の内容は保存しません。ページを閉じるか再読み込みすると消えます。</li>
-      <li>昼・夜の時間設定と、除外するカレンダーのIDは、次回も使えるよう利用者のブラウザ（localStorage）に保存します。このデータはブラウザの外へ送信されず、ブラウザのサイトデータを削除すると消えます。</li>
+      <li>昼・夜の時間設定、除外するカレンダーのID、画面の色（ライト／ダーク）の設定は、次回も使えるよう利用者のブラウザ（localStorage）に保存します。このデータはブラウザの外へ送信されず、ブラウザのサイトデータを削除すると消えます。</li>
     </ul>
 
 
@@ -208,7 +208,7 @@
         <li>The access token obtained at sign-in is read from the URL fragment (after #) of the page Google returns you to, and is immediately removed from the URL and the browsing history. After that it is kept only in browser memory while the page is open, and is never stored.</li>
         <li>During sign-in, a one-time value used to verify Google's response and the date range you entered are kept temporarily in sessionStorage, which is cleared when the tab is closed. Both are deleted as soon as you return from Google.</li>
         <li>Event data is never stored. It is gone when you close or reload the page.</li>
-        <li>Your daytime and nighttime settings and the IDs of calendars you exclude are saved in your browser's localStorage so they can be reused next time. This data never leaves your browser and is deleted when you clear the site data in your browser.</li>
+        <li>Your daytime and nighttime settings, the IDs of calendars you exclude and your display theme (light or dark) are saved in your browser's localStorage so they can be reused next time. This data never leaves your browser and is deleted when you clear the site data in your browser.</li>
       </ul>
 
 
