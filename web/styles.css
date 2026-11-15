@@ -91,8 +91,6 @@ body {
   max-width: 760px;
   margin: 0 auto;
   padding: 30px;
-  /* 右上に固定した切り替えボタンの下からヘッダーを始める */
-  padding-top: 64px;
   box-sizing: border-box;
 }
 
@@ -106,13 +104,16 @@ body {
   max-width: 700px;
 }
 
+/* タイトルの下にログインの行を置く。右上は切り替えボタンのために空けておく */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
+  display: block;
   max-width: 700px;
   margin-bottom: 10px;
+}
+
+/* タイトルが右上の切り替えボタンの下に入り込まないように */
+.header h1 {
+  padding-right: 44px;
 }
 
 .header h1 {
@@ -133,8 +134,6 @@ body {
 
 .policy {
   line-height: 1.7;
-  /* 規約のページには切り替えボタンがないので、上の余白は元のまま */
-  padding-top: 30px;
 }
 
 .policy h1 {
@@ -169,9 +168,13 @@ body {
 }
 
 .account-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 10px;
   font-size: 13px;
   color: var(--muted);
-  text-align: right;
 }
 
 h1 {
@@ -448,10 +451,6 @@ textarea {
   color: var(--warning);
 }
 
-.login-button {
-  margin-left: 8px;
-}
-
 /* ライト / ダークの切り替え（トップページ・紹介ページと同じ見た目と位置） */
 .theme-toggle {
   position: fixed;
@@ -554,19 +553,12 @@ body {
   margin: 0 0 6px;
 }
 
-/* 右上に固定した切り替えボタンと重ならないように */
-.header {
-  padding-right: 44px;
-  box-sizing: border-box;
-}
-
 .theme-toggle {
   right: max(12px, env(safe-area-inset-right));
 }
 
 .account-info {
   font-size: 14px;
-  text-align: left;
 }
 
 
