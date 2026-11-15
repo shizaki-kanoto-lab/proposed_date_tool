@@ -105,16 +105,14 @@ body {
   max-width: 848px;
 }
 
-/* タイトルの下にログインの行を置く。右上は切り替えボタンのために空けておく */
+/* タイトルと同じ行の右側、切り替えボタンの左にログインを置く（スマホではタイトルの下） */
 .header {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
   max-width: 848px;
   margin-bottom: 10px;
-}
-
-/* タイトルが右上の切り替えボタンの下に入り込まないように */
-.header h1 {
-  padding-right: 44px;
 }
 
 .header h1 {
@@ -173,10 +171,10 @@ body {
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  /* ログイン前後で行の高さが変わり、下の内容がずれないよう、ボタンの高さを確保する */
-  min-height: 41px;
   gap: 8px 12px;
-  margin-top: 10px;
+  /* 右上の切り替えボタン（幅36px）と12px空ける */
+  margin-left: auto;
+  margin-right: 48px;
   font-size: 13px;
   color: var(--muted);
 }
@@ -565,19 +563,25 @@ body {
   box-sizing: border-box;
 }
 
-/* タイトル */
+/* タイトル（ログインはタイトルの下に右寄せ） */
 .header {
   display: block;
   max-width: none;
 }
 
+/* タイトルが右上の切り替えボタンの下に入り込まないように */
 .header h1 {
   font-size: 26px;
   margin: 0 0 6px;
+  padding-right: 44px;
 }
 
 .account-info {
   font-size: 14px;
+  margin-top: 10px;
+  margin-right: 0;
+  /* ログイン前後で行の高さが変わり、下の内容がずれないよう、ボタンの高さを確保する */
+  min-height: 41px;
 }
 
 .theme-toggle {
