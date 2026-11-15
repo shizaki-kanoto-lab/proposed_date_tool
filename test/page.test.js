@@ -52,8 +52,8 @@ test('画面の色の切り替えは、ほかのページと同じ theme だけ�
   const css = read('styles.css');
 
   // 描画の前に色を決めるため、head でモジュールより先に読み込む
-  assert.ok(html.indexOf('<script src="theme.js"></script>') < html.indexOf('src="app.js"'));
-  assert.ok(html.indexOf('src="theme.js"') < html.indexOf('</head>'));
+  assert.ok(html.indexOf('<script src="theme.js?v=') < html.indexOf('src="app.js?v='));
+  assert.ok(html.indexOf('src="theme.js?v=') < html.indexOf('</head>'));
   assert.ok(html.includes('id="themeButton"'));
 
   assert.deepEqual(theme.match(/\.setItem\([^,]+/g), ['.setItem(THEME_KEY']);
@@ -67,6 +67,32 @@ test('画面の色の切り替えは、ほかのページと同じ theme だけ�
   // 色は :root の変数にまとめ、個別のルールに色を直書きしない
   const rules = css.slice(css.indexOf('body {'));
   assert.doesNotMatch(rules, /#[0-9a-f]{3,6}\b|\bwhite\b/i);
+});
+
+
+test('CSS と JS は ?v= 付きで読み込み、古いキャッシュが残らない', () => {
+  const versions = name => [...name.matchAll(/(?:href|src)="(?:styles\.css|theme\.js|app\.js)\?v=(\d+)"/g)].map(match => match[1]);
+  const pages = [html, read('privacy.html'), read('terms.html')];
+
+  assert.equal(versions(html).length, 3);
+  assert.equal(new Set(pages.flatMap(versions)).size, 1, '全ページで同じ番号にそろえる');
+
+  for (const page of pages) {
+    assert.doesNotMatch(page, /(?:href|src)="(?:styles\.css|theme\.js|app\.js)"/);
+  }
+});
+
+
+test('Apps Script 版にも同じライト / ダークの切り替えがある', () => {
+  const gas = fs.readFileSync(new URL('../src/index.html', import.meta.url), 'utf8');
+  const style = gas.slice(gas.indexOf('<style>'), gas.indexOf('</style>'));
+
+  assert.ok(gas.includes('id="themeButton"'));
+  assert.match(gas, /THEME_KEY = 'theme'/);
+  assert.ok(gas.indexOf("THEME_KEY = 'theme'") < gas.indexOf('<body>'), '描画の前に色を決める');
+  assert.match(style, /:root\[data-theme="dark"\]/);
+  // 色は :root の変数にまとめ、個別のルールに色を直書きしない
+  assert.doesNotMatch(style.slice(style.indexOf('body {')), /#[0-9a-f]{3,6}\b|\bwhite\b/i);
 });
 
 
