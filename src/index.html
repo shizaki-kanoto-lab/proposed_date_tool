@@ -167,7 +167,8 @@
 .theme-toggle {
   position: fixed;
   z-index: 10;
-  top: max(12px, env(safe-area-inset-top));
+  /* タイトル（高さ48px）と縦の中心をそろえる */
+  top: max(36px, env(safe-area-inset-top));
   /* ツール本体（.container の幅 760px・余白 30px）の右端にそろえる */
   right: max(calc(max(0px, (100% - 760px) / 2) + 30px), env(safe-area-inset-right));
   display: inline-flex;
@@ -539,6 +540,8 @@ body {
 
 .theme-toggle {
   right: max(12px, env(safe-area-inset-right));
+  /* スマホではタイトルの高さが39pxになるため */
+  top: max(18px, env(safe-area-inset-top));
 }
 
 .account-info {
