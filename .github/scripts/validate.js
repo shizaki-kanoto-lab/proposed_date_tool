@@ -87,7 +87,8 @@ while ((match = tagPattern.exec(htmlForTagCheck)) !== null) {
   const isClosing = match[1] === '/';
   const tagName = match[2].toLowerCase();
 
-  if (VOID_TAGS.has(tagName)) {
+  // <path ... /> のような自己終了タグ（SVG の中で使う）は閉じタグを持たない
+  if (VOID_TAGS.has(tagName) || match[0].endsWith('/>')) {
     continue;
   }
 
