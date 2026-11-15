@@ -1,45 +1,36 @@
 /**
- * 画面の色（自動・ライト・ダーク）を切り替える。
+ * ライト / ダークの切り替え。
  *
+ * トップページや紹介ページと同じ動き・同じ保存先（localStorage の theme）にそろえている。
+ * 同じドメインなので、どこかで選んだ色はほかのページにも引き継がれる。
+ * 選ぶまでは端末の設定（prefers-color-scheme）に合わせる。
  * 色がちらつかないよう、<head> で読み込み、描画の前に data-theme を付ける。
- * 「自動」のときは何も保存せず、端末の設定（prefers-color-scheme）に合わせる。
  */
 (function () {
-  var THEME_KEY = 'proposedDateTheme';
-  var MODES = ['auto', 'light', 'dark'];
-  var LABELS = { auto: '表示：自動', light: '表示：ライト', dark: '表示：ダーク' };
+  var THEME_KEY = 'theme';
+  var root = document.documentElement;
+  var media = window.matchMedia('(prefers-color-scheme: dark)');
 
-  function readMode() {
+  function saved() {
     try {
-      var saved = window.localStorage.getItem(THEME_KEY);
-      return MODES.indexOf(saved) >= 0 ? saved : 'auto';
+      var theme = window.localStorage.getItem(THEME_KEY);
+      return theme === 'light' || theme === 'dark' ? theme : null;
     } catch (error) {
-      return 'auto';
+      return null;
     }
   }
 
-  function saveMode(mode) {
-    try {
-      if (mode === 'auto') {
-        window.localStorage.removeItem(THEME_KEY);
-      } else {
-        window.localStorage.setItem(THEME_KEY, mode);
-      }
-    } catch (error) {
-      // 保存できなくても、このページを開いている間は切り替わる
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+
+    var button = document.getElementById('themeButton');
+
+    if (button) {
+      button.setAttribute('aria-label', theme === 'dark' ? 'ライトモードに切り替える' : 'ダークモードに切り替える');
     }
   }
 
-  function applyMode(mode) {
-    if (mode === 'auto') {
-      document.documentElement.removeAttribute('data-theme');
-    } else {
-      document.documentElement.setAttribute('data-theme', mode);
-    }
-  }
-
-  var mode = readMode();
-  applyMode(mode);
+  apply(saved() || (media.matches ? 'dark' : 'light'));
 
   document.addEventListener('DOMContentLoaded', function () {
     var button = document.getElementById('themeButton');
@@ -48,18 +39,24 @@
       return;
     }
 
-    function render() {
-      button.textContent = LABELS[mode];
-      button.title = '画面の色を切り替えます（自動 → ライト → ダーク）';
-    }
-
-    render();
+    apply(root.getAttribute('data-theme'));
 
     button.addEventListener('click', function () {
-      mode = MODES[(MODES.indexOf(mode) + 1) % MODES.length];
-      applyMode(mode);
-      saveMode(mode);
-      render();
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      apply(next);
+
+      try {
+        window.localStorage.setItem(THEME_KEY, next);
+      } catch (error) {
+        // 保存できなくても、このページを開いている間は切り替わる
+      }
     });
+  });
+
+  // 手動で選んでいない間は、端末の設定が変わったら合わせる
+  media.addEventListener('change', function (event) {
+    if (!saved()) {
+      apply(event.matches ? 'dark' : 'light');
+    }
   });
 })();
