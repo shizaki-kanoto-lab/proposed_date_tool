@@ -47,7 +47,7 @@ test('トークンをブラウザに保存しない', () => {
 });
 
 
-test('画面の色の切り替えは、表示の設定だけを保存する', () => {
+test('画面の色の切り替えは、ほかのページと同じ theme だけを保存する', () => {
   const theme = read('theme.js');
   const css = read('styles.css');
 
@@ -57,7 +57,8 @@ test('画面の色の切り替えは、表示の設定だけを保存する', ()
   assert.ok(html.includes('id="themeButton"'));
 
   assert.deepEqual(theme.match(/\.setItem\([^,]+/g), ['.setItem(THEME_KEY']);
-  assert.match(theme, /THEME_KEY = 'proposedDateTheme'/);
+  // トップページ・紹介ページと同じ保存先を使う（同じドメイン）
+  assert.match(theme, /THEME_KEY = 'theme'/);
   assert.doesNotMatch(theme, /sessionStorage|indexedDB|document\.cookie|fetch\(|XMLHttpRequest/);
 
   // 端末の設定に合わせるダークと、手動のダーク・ライトの両方がある

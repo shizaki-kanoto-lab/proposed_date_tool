@@ -1,4 +1,4 @@
-/* 画面の色。ライト／ダークはここだけで切り替える */
+/* 画面の色。ライト／ダークはここだけで切り替える（ダークは紹介ページと同じ色） */
 :root {
   color-scheme: light;
   --bg: #fff;
@@ -28,55 +28,55 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #16191d;
-    --text: #e4e6e8;
-    --muted: #a4abb3;
-    --panel: #22272d;
-    --surface: #2b3138;
-    --surface-alt: #1d2126;
-    --border: #3b434c;
-    --border-strong: #4e5862;
-    --accent: #00a597;
-    --accent-hover: #00b8a9;
-    --accent-border: #2bb5a8;
-    --accent-text: #5fd9cc;
-    --on-accent: #fff;
-    --button-bg: #1d2126;
-    --button-hover: #1b3330;
+    --bg: #0e1719;
+    --text: #e6f0f1;
+    --muted: #a2b4b7;
+    --panel: #152225;
+    --surface: #1b2c30;
+    --surface-alt: #10201f;
+    --border: #263a3e;
+    --border-strong: #35504f;
+    --accent: #3fd9cb;
+    --accent-hover: #66e3d8;
+    --accent-border: #3fd9cb;
+    --accent-text: #3fd9cb;
+    --on-accent: #0e1719;
+    --button-bg: #152225;
+    --button-hover: #17302f;
     --error: #ff7a7a;
-    --success: #7cb6ff;
-    --warning: #f2a65e;
-    --daytime: #3d3520;
-    --nighttime: #1f3049;
-    --notice-bg: #163330;
-    --notice-text: #c3eee8;
+    --success: #8fb8ff;
+    --warning: #f5c542;
+    --daytime: #3a3420;
+    --nighttime: #1d2c4a;
+    --notice-bg: #17302f;
+    --notice-text: #e6f0f1;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #16191d;
-  --text: #e4e6e8;
-  --muted: #a4abb3;
-  --panel: #22272d;
-  --surface: #2b3138;
-  --surface-alt: #1d2126;
-  --border: #3b434c;
-  --border-strong: #4e5862;
-  --accent: #00a597;
-  --accent-hover: #00b8a9;
-  --accent-border: #2bb5a8;
-  --accent-text: #5fd9cc;
-  --on-accent: #fff;
-  --button-bg: #1d2126;
-  --button-hover: #1b3330;
+  --bg: #0e1719;
+  --text: #e6f0f1;
+  --muted: #a2b4b7;
+  --panel: #152225;
+  --surface: #1b2c30;
+  --surface-alt: #10201f;
+  --border: #263a3e;
+  --border-strong: #35504f;
+  --accent: #3fd9cb;
+  --accent-hover: #66e3d8;
+  --accent-border: #3fd9cb;
+  --accent-text: #3fd9cb;
+  --on-accent: #0e1719;
+  --button-bg: #152225;
+  --button-hover: #17302f;
   --error: #ff7a7a;
-  --success: #7cb6ff;
-  --warning: #f2a65e;
-  --daytime: #3d3520;
-  --nighttime: #1f3049;
-  --notice-bg: #163330;
-  --notice-text: #c3eee8;
+  --success: #8fb8ff;
+  --warning: #f5c542;
+  --daytime: #3a3420;
+  --nighttime: #1d2c4a;
+  --notice-bg: #17302f;
+  --notice-text: #e6f0f1;
 }
 
 body {
@@ -91,6 +91,8 @@ body {
   max-width: 760px;
   margin: 0 auto;
   padding: 30px;
+  /* 右上に固定した切り替えボタンの下からヘッダーを始める */
+  padding-top: 64px;
   box-sizing: border-box;
 }
 
@@ -131,6 +133,8 @@ body {
 
 .policy {
   line-height: 1.7;
+  /* 規約のページには切り替えボタンがないので、上の余白は元のまま */
+  padding-top: 30px;
 }
 
 .policy h1 {
@@ -448,10 +452,53 @@ textarea {
   margin-left: 8px;
 }
 
-.theme-button {
-  margin-left: 8px;
-  padding: 6px 10px;
-  font-size: 13px;
+/* ライト / ダークの切り替え（トップページ・紹介ページと同じ見た目と位置） */
+.theme-toggle {
+  position: fixed;
+  z-index: 10;
+  top: max(12px, env(safe-area-inset-top));
+  /* ツール本体（.container の幅 760px・余白 30px）の右端にそろえる */
+  right: max(calc(max(0px, (100% - 760px) / 2) + 30px), env(safe-area-inset-right));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: 0 6px 18px -10px rgba(0, 0, 0, .45);
+  transition: border-color .15s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--surface);
+  border-color: var(--accent-border);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-toggle .sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-toggle .moon {
+  display: none;
 }
 
 .login-button:disabled {
@@ -507,15 +554,22 @@ body {
   margin: 0 0 6px;
 }
 
+/* 右上に固定した切り替えボタンと重ならないように */
+.header {
+  padding-right: 44px;
+  box-sizing: border-box;
+}
+
+.theme-toggle {
+  right: max(12px, env(safe-area-inset-right));
+}
+
 .account-info {
   font-size: 14px;
   text-align: left;
 }
 
-.theme-button {
-  display: block;
-  margin: 8px 0 0;
-}
+
 
 /* 説明 */
 .info {
