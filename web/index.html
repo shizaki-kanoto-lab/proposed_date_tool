@@ -22,9 +22,9 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/favicon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <!-- 更新したら ?v= の数字を上げる（Pages は10分キャッシュされるため） -->
-  <link rel="stylesheet" href="styles.css?v=7">
-  <script src="theme.js?v=7"></script>
-  <script type="module" src="app.js?v=7"></script>
+  <link rel="stylesheet" href="styles.css?v=8">
+  <script src="theme.js?v=8"></script>
+  <script type="module" src="app.js?v=8"></script>
 </head>
 
 
@@ -49,7 +49,10 @@
         <button id="loginButton" class="primary login-button" disabled>
           Googleでログイン
         </button>
-        <span>ログイン中：<span id="currentUserEmail">未ログイン</span></span>
+        <!-- ログイン中だけ表示。メールアドレスを押すと、Google のアカウント選択からログインし直す -->
+        <span id="accountStatus" hidden>
+          ログイン中：<button id="switchAccountButton" class="account-switch" type="button" title="別の Google アカウントに切り替える"><span id="currentUserEmail"></span></button>
+        </span>
       </div>
     
     </div>
