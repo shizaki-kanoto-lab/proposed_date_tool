@@ -456,7 +456,8 @@ textarea {
 .theme-toggle {
   position: fixed;
   z-index: 10;
-  top: max(12px, env(safe-area-inset-top));
+  /* タイトル（高さ48px）と縦の中心をそろえる */
+  top: max(36px, env(safe-area-inset-top));
   /* ツール本体（.container の幅 880px・余白 16px）の右端にそろえる */
   right: max(calc(max(0px, (100% - 880px) / 2) + 16px), env(safe-area-inset-right));
   display: inline-flex;
@@ -558,7 +559,9 @@ body {
   font-size: 14px;
 }
 
-
+.theme-toggle {
+  top: max(22px, env(safe-area-inset-top));
+}
 
 /* 説明 */
 .info {
