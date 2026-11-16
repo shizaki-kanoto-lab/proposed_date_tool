@@ -491,16 +491,18 @@ textarea {
   height: 18px;
 }
 
-.theme-toggle .sun {
+/* 今のモードのアイコンを出す（太陽＝ライト、月＝ダーク、半分＝自動） */
+.theme-toggle .sun,
+.theme-toggle .moon,
+.theme-toggle .auto {
   display: none;
 }
 
-:root[data-theme="dark"] .theme-toggle .sun {
+.theme-toggle:not([data-mode]) .auto,
+.theme-toggle[data-mode="auto"] .auto,
+.theme-toggle[data-mode="light"] .sun,
+.theme-toggle[data-mode="dark"] .moon {
   display: block;
-}
-
-:root[data-theme="dark"] .theme-toggle .moon {
-  display: none;
 }
 
 /* ログイン中のメールアドレス（押すとアカウントを切り替える） */
