@@ -21,8 +21,6 @@
   --warning: #b35c00;
   --daytime: #fff3cd;
   --nighttime: #dbeafe;
-  --notice-bg: #e8f9f7;
-  --notice-text: #1e4a46;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -48,8 +46,6 @@
     --warning: #f5c542;
     --daytime: #3a3420;
     --nighttime: #1d2c4a;
-    --notice-bg: #17302f;
-    --notice-text: #e6f0f1;
   }
 }
 
@@ -75,8 +71,6 @@
   --warning: #f5c542;
   --daytime: #3a3420;
   --nighttime: #1d2c4a;
-  --notice-bg: #17302f;
-  --notice-text: #e6f0f1;
 }
 
 body {
@@ -526,19 +520,6 @@ button.account-switch:hover {
 .login-button:disabled {
   opacity: 0.6;
   cursor: default;
-}
-
-.login-notice {
-  max-width: 848px;
-  box-sizing: border-box;
-  margin: 10px 0 0;
-  padding: 8px 12px;
-  border-left: 4px solid var(--accent);
-  border-radius: 4px;
-  background: var(--notice-bg);
-  color: var(--notice-text);
-  font-size: 14px;
-  line-height: 1.6;
 }
 
 @media screen and (max-width: 1000px) {
